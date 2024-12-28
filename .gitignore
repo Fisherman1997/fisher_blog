@@ -1,0 +1,62 @@
+# compiled output
+/**/dist
+/**/node_modules
+/**/build
+/**/log
+/**/.next
+/**/imgS
+/**/dist_bundle
+/**/.idea
+/**/out
+
+/**/.package-lock.json
+/**/.yarn.lock
+
+#.env.development
+#.env.production
+#.env
+##*/.env
+#*/.env.development
+#*/.env.production
+
+# asp.net
+/**/bin
+/**/obj
+/**/wwwroot
+/**/.vs
+/**/.github
+
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+*.psd
+
+# OS
+.DS_Store
+
+# Tests
+*/coverage
+*/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
