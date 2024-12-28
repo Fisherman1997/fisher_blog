@@ -1,0 +1,36 @@
+.backtop{
+    cursor: pointer;
+    position: fixed;
+    display: none;
+    width: 35px;
+    height: 35px;
+    padding: 5px;
+    bottom: 40px;
+    font-weight: bold;
+    font-size: 16px;
+    background-color: rgb(75, 120, 187);
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 5px;
+    z-index: 123456;
+    animation-duration: .5s;
+}
+
+
+.backtopDisp {
+    display: flex;
+    justify-content: center;
+}
+
+
+@media screen and (min-width:1453px) { 
+    .backtop {
+        right: calc((100vw - 1450px) / 2);
+    }
+}
+@media screen and (max-width:1453px) { 
+    .backtop {
+        right: 0;
+    }
+}

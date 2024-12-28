@@ -1,0 +1,33 @@
+{
+  "name": "blog-home",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint",
+    "export": "next build && next export"
+  },
+  "bin": ".next/standalone/server.js",
+  "pkg": {
+    "scripts": "server.js",
+    "assets": [
+      "public/**/*",
+      ".next/**/*",
+      "node_modules/**/*"
+    ]
+  },
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "axios": "1.7.4",
+    "highlight.js": "^11.6.0",
+    "next": "14.2.10",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "eslint": "8.23.0",
+    "eslint-config-next": "12.2.5"
+  }
+}

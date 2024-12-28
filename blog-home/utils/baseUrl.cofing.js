@@ -1,0 +1,8 @@
+export const blogUrl = '/blog'
+export const apiUrl = '/api'
+export const imgUrl = ''
+// export const blogUrl = 'http://localhost:5000/blog'
+// export const apiUrl = 'http://localhost:5000/api'
+// export const imgUrl = 'http://localhost:5000'
+export const githubUsers = 'https://api.github.com/users/'
+export const qqUsers = 'https://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg'

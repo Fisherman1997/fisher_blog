@@ -1,0 +1,87 @@
+body,div,ul,li,h1,h2,h3,h4,h5,h6,form,input,textarea,p,th,i{margin:0; padding:0;}
+li,i{list-style:none;}
+input,textarea,select{font-family:inherit; font-weight:inherit; font-size:14px;}
+img{border:0;}
+.clear{height:0; overflow:hidden; clear:both;}
+dl,dt,dd{ margin: 0px; padding: 0px; list-style: none;}
+.fl{ float:left}
+.fr{ float:right}
+body,td,th{font-size: 14px; color:#333;}
+a{font-size:14px; color:#333;}
+a:link{text-decoration:none;}
+a:visited{text-decoration:none;}
+a:hover{text-decoration:none;}
+
+::-webkit-scrollbar{
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track-piece{
+    box-shadow: 0 0 1px rgba(0, 0, 0, .5);
+}
+::-webkit-scrollbar-thumb{
+    background-color: #c2c2c2;
+    border-radius: 3px;
+}
+
+/* 主色 #13a3ed */
+
+
+
+/* element-plsu */
+.custom-dialog-body{
+    max-height: calc(100vh - 8vh - 15px) !important;
+    overflow: hidden;
+    margin-bottom: 0 !important;
+    transition-duration:.3s;
+    transition-property: width,height,margin;
+}
+.el-dialog__header{
+    padding: 15px !important;
+    margin-right: 0px !important;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #c2c2c2;
+}
+.el-dialog.is-fullscreen{
+    margin: 0 !important;
+    min-height: 100vh !important;
+    overflow: hidden !important;
+    transition-duration:.3s;
+    
+}
+.custom-dialog-body .el-dialog__body{
+    max-height: calc(100vh - 52px - 60px - 8vh - 15px);
+    overflow-y: auto !important;
+}
+.el-dialog.is-fullscreen .el-dialog__body{
+    height: calc(100vh - 52px - 60px);
+    overflow-y: auto !important;
+}
+
+
+
+
+
+/* 动画 */
+
+@keyframes eject {
+    0%{
+        transform: scale(0);
+        opacity: 0;
+    }
+    100%{
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* @keyframes disappear {
+    0%{
+        transform: scale(1);
+        opacity: 1;
+    }
+    100%{
+        transform: scale(0);
+        opacity: 0;
+    }
+} */

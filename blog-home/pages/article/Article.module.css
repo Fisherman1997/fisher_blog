@@ -1,0 +1,51 @@
+.article{
+    display: flex;
+}
+.article .articleContent{
+    flex: 1;
+}
+.article .articleRight{
+    width: 200px;
+    margin-left: 15px;
+}
+
+.articleRight ul{
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+.articleRight ul li{
+    cursor: pointer;
+    line-height: 40px;
+    font-size: 16px;
+    padding: 0 15px;
+    background-color: rgba(26, 41, 53, .2);
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+.articleRight ul li:hover {
+    background-color: rgba(51, 148, 228,.5);
+}
+
+@media screen and (max-width:860px) {
+    .article{
+        flex-direction: column-reverse;
+    }
+    .articleRight ul{
+        display: flex;
+        flex-wrap: wrap;
+        width: calc( 100vw - 80px );
+        margin-bottom: 15px;
+        background-color: none;
+        box-shadow: none;
+    }
+    
+    .articleRight ul li {
+        padding: 0 30px;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+
+
+  @media screen and (max-width:640px) {
+    .articleRight{
+        display: none;
+    }
+  }

@@ -1,0 +1,19 @@
+.custom{
+    background-color: rgba(0, 0, 0, .3);
+    box-shadow: 0 0 5px rgba(0, 0, 0, .5);
+    animation-duration: .5s;
+    animation-name: eject;
+    padding: 3px;
+    border-radius: 15px;
+}
+
+@keyframes eject {
+    0%{
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    100%{
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
