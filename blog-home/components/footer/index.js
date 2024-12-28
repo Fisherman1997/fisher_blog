@@ -1,4 +1,4 @@
-import WaveCanvas from './modula/waveCanvas'
+// import WaveCanvas from './modula/waveCanvas'
 
 import styles from './Footer.module.css'
 
@@ -32,7 +32,7 @@ const Footer = () => {
                 <span>|</span>
                 <span onClick={ TopAadmin } className={ styles.admin }>后台管理</span>
             </div>
-            <WaveCanvas />
+            {/* <WaveCanvas /> */}
         </div>
     )
 }

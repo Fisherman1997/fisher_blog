@@ -90,8 +90,8 @@ export default function AticleDetails() {
         loadData(str)
         document.onscroll = (ev) => {
             const top = document.body.scrollTop || document.documentElement.scrollTop
-            const left = document.querySelector('.AticleDetails_aticleDetailsLeft__I9bSI')
-            const right = document.querySelector('.AticleDetails_aticleDetailsRight__Fd24e div')
+            const left = document.querySelector('.aticleDetails_content')
+            const right = document.querySelector('.aticleDetails_nav div')
             let rightY = Math.max(top - 260, 0)
             rightY = Math.min(rightY, left && left.offsetHeight - right.offsetHeight)
             right && ( right.style = `transform:translateY(${rightY}px)` )
@@ -110,7 +110,7 @@ export default function AticleDetails() {
             {
                 loading ? <Loading /> :
                 <div className={ styles.aticleDetails }>
-                    <div className={ `${styles.aticleDetailsLeft}  animate__fadeIn` }>
+                    <div className={ `${styles.aticleDetailsLeft}  animate__fadeIn aticleDetails_content` }>
                         <div className={ styles.aticleDetailsHead }>
                             <span>时间：{ new Date(content.createDate).toLocaleString() }</span>
                             <span>笔者：{ content.createUserName }</span>
@@ -121,7 +121,7 @@ export default function AticleDetails() {
                         <div className='aticleDetailsContent' onClick={imgAticlePreview} dangerouslySetInnerHTML={{ __html: content.content }}>
                         </div>
                     </div>
-                    <div className={ styles.aticleDetailsRight }>
+                    <div className={ `${styles.aticleDetailsRight} aticleDetails_nav` }>
                         <div>
                         {
                             content.contents ? navConstruct(content.contents) : <></>
@@ -139,10 +139,22 @@ export default function AticleDetails() {
             </div>
             { content.id ?  <Comment articleId={`article${content.id}`} /> : <></> }
             <div className={ styles.navBut } onClick={ () => setRightNav(true) }></div>
-            { rightNav ? <div className={ `${styles.rightNavList} animate__fadeInRightBig` }>
-                <h3>目录</h3><i onClick={ () => setRightNav(false) }></i>
-                { content.contents ? navConstruct(content.contents, 230) : <></> }
-            </div> : <></> }
+            { 
+                rightNav ? 
+                <div className={ `${styles.rightNavList} animate__fadeInRightBig` }>
+                    <h3>目录</h3>
+                    <i onClick={ () => setRightNav(false) }></i>
+                    { 
+                        content.contents ? 
+                        navConstruct(content.contents, 230) 
+                        : <></> 
+                    }
+                    <span key={"commentTap"}>
+                        <a onClick={ () => jumpPosition("commentTap") } >评论</a>
+                    </span>
+                </div> 
+                : <></> 
+            }
 		</GlobalLayout>
 	)
 }
