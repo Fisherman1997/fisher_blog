@@ -111,6 +111,7 @@
 .randomlist .randomContent p {
     font-size: 16px;
     margin-bottom: 20px;
+    white-space: break-spaces;
 }
 
 .randomlist .randomContent img {

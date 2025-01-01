@@ -60,5 +60,6 @@ async function bootstrap(): Promise<void>   {
 }
 bootstrap()
     .then(() => {
+        if (process.env.NODE_ENV !== 'production') console.warn(`apiDocument：http://loaclhost:${process.env.PORT}/apiDocument`)
         console.info(`start_href: http://loaclhost:${process.env.PORT}`)
     });

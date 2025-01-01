@@ -63,6 +63,7 @@
 .randomInfo .randomContent p {
     font-size: 16px;
     margin-bottom: 20px;
+    white-space: break-spaces;
 }
 
 .randomInfo .randomContent img {
