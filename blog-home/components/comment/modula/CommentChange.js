@@ -37,6 +37,7 @@ const CommentChange = ({
         articleUrl: '',
         replyQQ: replyQQ
     })
+    const [ isSubmit, setIsSubmit ] = useState(false)
     const componentDidMount = async () => {
         const change = { ...commentItme }
         const reviewer = getStorageItme('reviewer')
@@ -67,15 +68,21 @@ const CommentChange = ({
     const insert = async (element) => {
         const bodyContent = { ...element }
         if (!element.content.length) return Message('请输入内容')
-        const data = await postFn('comment/insert', element)
-        if (data && data.statusCode === 200) {
-            bodyContent.content = ''
-            setComment(bodyContent)
-            setStorageItme('reviewer',bodyContent)
-            loadData()
-        } else {
-            Message(data.remarks || '不知道是为什么，反正是失败了')
-        }
+        setIsSubmit(true)
+        postFn('comment/insert', element)
+        .then(data => {
+            if (data && data.statusCode === 200) {
+                bodyContent.content = ''
+                setComment(bodyContent)
+                setStorageItme('reviewer',bodyContent)
+                loadData()
+            } else {
+                Message(data.remarks || '不知道是为什么，反正是失败了')
+            }
+        })
+        .finally(() => {
+            setIsSubmit(false)
+        })
     }
     // const getUserInfo = async () => {
     //     const { statusCode, result } = await postFn('comment/check', { qq: Number(commentItme.qq) })
@@ -120,7 +127,7 @@ const CommentChange = ({
             <div className={styles.changeContent}>
                 <span><i>内容：</i><textarea value={commentItme.content || ''} onChange={ (ev) => changeInput('content',ev)}  placeholder='内容必填,不少于5字'/></span>
                 <span>
-                    <button onClick={ onSubmit }>提交</button>
+                    <button disabled={ isSubmit } onClick={ onSubmit }>提交</button>
                 </span>
             </div>
         </div>

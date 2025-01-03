@@ -26,6 +26,7 @@ namespace Blog.Service.Api
             var element = new RoutingConfigureEnity
             {
                 Title = param.Title,
+                Name = param.Name,
                 Path = param.Path,
                 Component = param.Component,
                 Range = param.Range,
@@ -46,6 +47,7 @@ namespace Blog.Service.Api
 
             routingConfigure.Title = param.Title;
             routingConfigure.Path = param.Path;
+            routingConfigure.Name = param.Name;
             routingConfigure.Component = param.Component;
             routingConfigure.Range = param.Range;
             routingConfigure.Menu = param.Menu;

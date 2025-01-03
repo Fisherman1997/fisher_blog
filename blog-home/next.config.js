@@ -3,6 +3,7 @@ const nextConfig = {
   output: 'export',
   reactStrictMode: true,
   swcMinify: true,
+  exportTrailingSlash: true,
   // output: 'standalone',
 }
 
