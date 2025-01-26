@@ -115,12 +115,13 @@
 }
 
 .randomlist .randomContent img {
-    height: 60px;
+    height: 300px;
 }
 
 
 .randomlist .randomContent ul {
     display: flex;
+    overflow-x: auto;
 }
 .randomlist .randomContent ul li {
     float: left;
