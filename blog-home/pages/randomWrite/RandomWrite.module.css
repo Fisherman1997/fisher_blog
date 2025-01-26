@@ -67,12 +67,13 @@
 }
 
 .randomInfo .randomContent img {
-    height: 60px;
+    height: 300px;
 }
 
 
 .randomInfo .randomContent ul {
     display: flex;
+    overflow-x: auto;
 }
 .randomInfo .randomContent ul li {
     float: left;
