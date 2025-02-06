@@ -38,6 +38,7 @@ namespace Blog.Service.Api
             var article = await Db.Queryable<ArticleListEnity>().Where(it => it.Id == param.Id).FirstAsync();
             article.Title = param.Title;
             article.UpdateTime = DateTime.Now;
+            article.ClassId = article.ClassId;
             article.Content = param.Content;
             article.Cover = JsonConvert.SerializeObject(param.Cover);
             await Db.Storageable(article).ExecuteCommandAsync();
