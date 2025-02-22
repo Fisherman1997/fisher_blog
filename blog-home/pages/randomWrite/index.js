@@ -51,7 +51,7 @@ export default function RandomWrite() {
                             { 
                                 content.cover_list ?
                                 <ul className='clear'>
-                                    { content.cover_list.map(citem => ( <li key={citem}><img src={citem} onClick={() => imgShow(citem)} /></li> )) }
+                                    { content.cover_list.map(citem => ( <li key={citem}><img src={citem} onClick={(ev) => imgShow(ev)} /></li> )) }
                                 </ul>
                                 :<></>
                             }
