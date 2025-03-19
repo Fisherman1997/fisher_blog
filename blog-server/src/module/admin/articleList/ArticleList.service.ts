@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository, Like } from 'typeorm'
 import { ArticleList } from '../../../db/entities/ArticleList'
 import { FileService } from '../file/file.service'
-import { formatTime } from '../../../common/commonly.fun'
+import {assignProps, formatTime} from '../../../common/commonly.fun'
 import {ArticleFindParam, InsertArticleParam, UpdateArticleParam} from "./model/ArticleList.param";
 import {PageRsult} from "../../../model/BaseRsult";
 import {ArticleFindResult} from "./model/ArticleList.Rsult";
@@ -22,12 +22,9 @@ export class ArticleService {
     // 新增
     async insert(param: InsertArticleParam): Promise<void> {
         const article = new ArticleList()
-        article.title = param.title;
+        assignProps(article, param, ["createDate", "clicks", "cover"])
         article.createDate = formatTime();
-        article.createUserId = param.CreateUserId;
-        article.classId = param.classId;
         article.clicks = 0;
-        article.content = param.content;
         article.cover = param.cover !== null ? JSON.stringify(param.cover) : null
         await this.articleRepository.save(article)
     }
@@ -35,10 +32,8 @@ export class ArticleService {
     // 修改
     async update(param: UpdateArticleParam): Promise<void> {
         const article = await this.articleRepository.findOne({where: { id: param.id }})
-        article.title = param.title;
+        assignProps(article, param, ["updateTime", "cover"])
         article.updateTime = formatTime();
-        article.classId = param.classId;
-        article.content = param.content;
         article.cover = param.cover !== null ? JSON.stringify(param.cover) : null
         await this.articleRepository.save(article)
     }

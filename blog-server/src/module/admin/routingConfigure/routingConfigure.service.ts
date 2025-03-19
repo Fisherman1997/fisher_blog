@@ -10,6 +10,7 @@ import {
 } from "./model/routingConfigure.param";
 import {RoutingConfigureFindRsutl} from "./model/RoutingConfigure.Rsult";
 import {IdParam} from "../../../model/BaseParam";
+import {assignProps} from "../../../common/commonly.fun";
 
 
 
@@ -28,14 +29,7 @@ export class RoutingConfigureService{
             param.serialNumber = serialNumber + 1
         }
         const element = new RoutingConfigure()
-        element.title = param.title;
-        element.path = param.path;
-        element.component = param.component;
-        element.range = param.range;
-        element.menu = param.menu;
-        element.redirect = param.redirect;
-        element.status = param.status;
-        element.serialNumber = param.serialNumber;
+        assignProps(element, param)
         await this.routingRepository.save(element)
     }
 
@@ -45,14 +39,7 @@ export class RoutingConfigureService{
             where: { id: param.id }
         })
         if (!element) throw new NotFoundException(`此项不存在`)
-        element.title = param.title;
-        element.path = param.path;
-        element.component = param.component;
-        element.range = param.range;
-        element.menu = param.menu;
-        element.redirect = param.redirect;
-        element.status = param.status;
-        element.serialNumber = param.serialNumber;
+        assignProps(element, param)
         await this.routingRepository.save(element)
     }
 

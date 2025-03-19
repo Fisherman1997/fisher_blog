@@ -2,12 +2,13 @@ import { Injectable, NotFoundException} from '@nestjs/common'
 import { InjectRepository } from  '@nestjs/typeorm'
 import { Repository, In, IsNull } from 'typeorm'
 import { Comment } from '../../../db/entities/Comment'
-import { formatTime } from '../../../common/commonly.fun'
+import {assignProps, formatTime} from '../../../common/commonly.fun'
 import { MailerService } from "@nestjs-modules/mailer"
 import {CommentHomeFindParam, CommentInsertParam} from "./model/comment.param";
 import {PageRsult} from "../../../model/BaseRsult";
 import {CommentRsutl} from "./model/Comment.Rsutl";
 import * as process from "node:process";
+import e from "express";
 
 @Injectable()
 export class CommentService{
@@ -22,14 +23,8 @@ export class CommentService{
     async insert (body: CommentInsertParam): Promise<void>{
         if (!body.content.length) throw new NotFoundException("别废话填！！！！")
         const element = new Comment()
-        element.articleId = body.articleId
+        assignProps(element, body)
         element.createDate = formatTime()
-        element.parentId = body.parentId
-        element.qq = body.qq
-        element.replyName = body.replyName
-        element.content = body.content
-        element.reviewerName = body.reviewerName
-        element.httpsrc = body.httpsrc
         if (body.replyQQ !== element.qq) {
             const result = await this.setVerify(body)
             if (!result) throw new NotFoundException("邮箱发送失败，不知道为啥总之就是失败了，看看你的QQ对不对")

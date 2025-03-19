@@ -5,6 +5,7 @@ import { Links } from '../../../db/entities/Links'
 import {LinksInsertParam, LinksUpdateParam} from "./model/links.param";
 import {PageRsult} from "../../../model/BaseRsult";
 import {IdParam, PageParam} from "../../../model/BaseParam";
+import {assignProps} from "../../../common/commonly.fun";
 
 @Injectable()
 export class LinksService {
@@ -15,11 +16,7 @@ export class LinksService {
     // 新增
     async insert(body: LinksInsertParam): Promise<void> {
         const link = new Links()
-        link.name = body.name
-        link.avatar = body.avatar
-        link.http_url = body.http_url
-        link.status = body.status
-        link.description = body.description
+        assignProps(link, body)
         await this.linksRepository.save(link)
     }
 
@@ -28,11 +25,7 @@ export class LinksService {
     async update(body: LinksUpdateParam): Promise<void> {
         const link = await this.linksRepository.findOne({where: { id: body.id }})
         if (!link) throw new NotFoundException("不存在该项目")
-        link.name = body.name
-        link.avatar = body.avatar
-        link.http_url = body.http_url
-        link.status = body.status
-        link.description = body.description
+        assignProps(link, body)
         await this.linksRepository.save(body)
     }
 

@@ -21,18 +21,23 @@ namespace Blog.Service.Home
 
         public async Task Insert(CommentInsertParam param)
         {
-            var element = new CommentEnity
-            {
-                ArticleId = param.ArticleId,
-                CreateDate = DateTime.Now,
-                ParentId = param.ParentId,
-                Qq = param.Qq,
-                ReplyName = param.ReplyName,
-                Content = param.Content,
-                ReviewerName = param.ReviewerName,
-                Httpsrc = param.Httpsrc
-            };
-            //Console.WriteLine(param.ReplyQQ);
+
+            //var element = new CommentEnity
+            //{
+            //    ArticleId = param.ArticleId,
+            //    CreateDate = DateTime.Now,
+            //    ParentId = param.ParentId,
+            //    Qq = param.Qq,
+            //    ReplyName = param.ReplyName,
+            //    Content = param.Content,
+            //    ReviewerName = param.ReviewerName,
+            //    Httpsrc = param.Httpsrc
+            //};
+
+            var element = new CommentEnity();
+            CommonFun.AssignProps(element, param,nameof(CommentEnity.Qq));
+            element.CreateDate = DateTime.Now;
+
             if (param.ReplyQQ != element.Qq)
             {
                 try

@@ -13,6 +13,7 @@ import {
 import {PageRsult} from "../../../model/BaseRsult";
 import {IdParam} from "../../../model/BaseParam";
 import {FileService} from "../file/file.service";
+import {assignProps} from "../../../common/commonly.fun";
 
 
 @Injectable()
@@ -34,10 +35,8 @@ export class UserService {
             ))
         }
         const element = new User()
+        assignProps(element, body, ["password", "portrait"])
         element.password = Md5.hashStr(body.password) // 使用MD5加密
-        element.code = body.code
-        element.status = body.status
-        element.name = body.name
         if (body.portrait && body.portrait.length) element.portrait = JSON.stringify(body.portrait)
         await this.userRepository.save(element)
     }
@@ -72,9 +71,8 @@ export class UserService {
             ))
         }
         const user = await this.userRepository.findOne({where: { id: body.id }})
-        user.name = body.name
-        user.code = body.code
-        user.status = body.status
+
+        assignProps(user, body, ["portrait"])
         if (body.portrait) user.portrait = body.portrait.length ? JSON.stringify(body.portrait) : null
         await this.userRepository.save(user)
     }

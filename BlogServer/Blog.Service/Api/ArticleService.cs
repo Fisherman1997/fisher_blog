@@ -2,6 +2,7 @@
 using Blog.Model.Param;
 using Blog.Model.Rsult;
 using Blog.Service.Api.Interface;
+using Blog.Utils;
 using Newtonsoft.Json;
 using SqlSugar;
 
@@ -20,26 +21,28 @@ namespace Blog.Service.Api
 
         public async Task Insert(ArticleInsertParam param)
         {
-            var article = new ArticleListEnity
-            {
-                Title = param.Title,
-                CreateDate = DateTime.Now,
-                CreateUserId = param.CreateUserId,
-                ClassId = param.ClassId,
-                Clicks = 0,
-                Content = param.Content,
-                Cover = param.Cover != null ? JsonConvert.SerializeObject(param.Cover) : null
-            };
+            //var article = new ArticleListEnity
+            //{
+            //    Title = param.Title,
+            //    CreateDate = DateTime.Now,
+            //    CreateUserId = param.CreateUserId,
+            //    ClassId = param.ClassId,
+            //    Clicks = 0,
+            //    Content = param.Content,
+            //    Cover = param.Cover != null ? JsonConvert.SerializeObject(param.Cover) : null
+            //};
+            var article = new ArticleListEnity();
+            CommonFun.AssignProps(article, param);
+            article.CreateDate = DateTime.Now;
+            article.Cover = param.Cover != null ? JsonConvert.SerializeObject(param.Cover) : null;
             await Db.Storageable(article).ExecuteCommandAsync();
         }
 
         public async Task Update(ArticleUpdateParam param)
         { 
             var article = await Db.Queryable<ArticleListEnity>().Where(it => it.Id == param.Id).FirstAsync();
-            article.Title = param.Title;
+            CommonFun.AssignProps(article, param);
             article.UpdateTime = DateTime.Now;
-            article.ClassId = article.ClassId;
-            article.Content = param.Content;
             article.Cover = JsonConvert.SerializeObject(param.Cover);
             await Db.Storageable(article).ExecuteCommandAsync();
         }

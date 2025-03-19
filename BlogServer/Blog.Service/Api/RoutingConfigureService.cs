@@ -2,9 +2,9 @@
 using Blog.Model.Param;
 using Blog.Model.Rsult;
 using Blog.Service.Api.Interface;
+using Blog.Utils;
 using Newtonsoft.Json;
 using SqlSugar;
-
 namespace Blog.Service.Api
 {
     public class RoutingConfigureService: IRoutingConfigureService
@@ -23,18 +23,20 @@ namespace Blog.Service.Api
                 var count = await Db.Queryable<RoutingConfigureInsertParam>().CountAsync();
                 param.SerialNumber = count + 1;
             }
-            var element = new RoutingConfigureEnity
-            {
-                Title = param.Title,
-                Name = param.Name,
-                Path = param.Path,
-                Component = param.Component,
-                Range = param.Range,
-                Menu = param.Menu,
-                Redirect = param.Redirect,
-                Status = param.Status,
-                SerialNumber = (int)param.SerialNumber!
-            };
+            //var element = new RoutingConfigureEnity
+            //{
+            //    Title = param.Title,
+            //    Name = param.Name,
+            //    Path = param.Path,
+            //    Component = param.Component,
+            //    Range = param.Range,
+            //    Menu = param.Menu,
+            //    Redirect = param.Redirect,
+            //    Status = param.Status,
+            //    SerialNumber = (int)param.SerialNumber!
+            //};
+            var element = new RoutingConfigureEnity();
+            CommonFun.AssignProps(element, param);
             await Db.Storageable(element).ExecuteCommandAsync();
         }
 
@@ -45,16 +47,17 @@ namespace Blog.Service.Api
                 .FirstAsync();
             if (routingConfigure == null) throw new NullReferenceException("查不到此路由");
 
-            routingConfigure.Title = param.Title;
-            routingConfigure.Path = param.Path;
-            routingConfigure.Name = param.Name;
-            routingConfigure.Component = param.Component;
-            routingConfigure.Range = param.Range;
-            routingConfigure.Menu = param.Menu;
-            routingConfigure.Redirect = param.Redirect;
-            routingConfigure.Status = param.Status;
-            routingConfigure.SerialNumber = (int)param.SerialNumber!;
+            //routingConfigure.Title = param.Title;
+            //routingConfigure.Path = param.Path;
+            //routingConfigure.Name = param.Name;
+            //routingConfigure.Component = param.Component;
+            //routingConfigure.Range = param.Range;
+            //routingConfigure.Menu = param.Menu;
+            //routingConfigure.Redirect = param.Redirect;
+            //routingConfigure.Status = param.Status;
+            //routingConfigure.SerialNumber = (int)param.SerialNumber!;
 
+            CommonFun.AssignProps(routingConfigure, param);
             await Db.Storageable(routingConfigure).ExecuteCommandAsync();
 
         }
