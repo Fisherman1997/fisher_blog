@@ -8,7 +8,7 @@ export interface HeadingItem {
 
 
 export const getTitle = (content: string): HeadingItem[] => {
-    const type = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+    // const type = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
     const tempArr: HeadingItem[] = [];
 
     // 正则表达式优化：简化和精确匹配<h1>到<h6>标签

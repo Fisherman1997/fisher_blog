@@ -1,5 +1,5 @@
-    import {IsString, IsInt, IsArray, IsOptional} from 'class-validator'
-    import {PageParam} from "../../../../model/BaseParam";
+import {IsString, IsInt, IsArray, IsOptional} from 'class-validator'
+import {PageParam} from "../../../../model/BaseParam";
 
 
 export class RandomWriteInsertParam {
@@ -13,7 +13,7 @@ export class RandomWriteInsertParam {
 
     @IsInt()
     @IsOptional()
-    CreateUserId?: number
+    createUserId?: number
 }
 
 

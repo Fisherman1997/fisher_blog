@@ -32,8 +32,9 @@
             </ul>
             <el-button type="primary" @click="changeArticle('insert')" >新增</el-button>
         </div>
-        <div class="article-content">
+        <div class="article-content" :ref="content">
             <el-table
+                style="box-shadow: 0 0 1px rgba(0, 0, 0, .3); height: calc(100% - 40px);"
                 :border="true"
                 :data="tableObject.tableList">
                 <el-table-column type="index" label="序" :index="index => index + 1" width="60px"  align="center" />
@@ -69,12 +70,14 @@
 </template>
 
 <script setup>
-import { onBeforeMount, reactive } from 'vue'
+import { onBeforeMount, reactive, ref } from 'vue'
 import customDialog from '@/components/customDialog'
 import ArticleChangeModula from './modula/ArticleChangeModula'
 import { useTable } from '@/hooks/useTable'
 import { useAxios } from '@/hooks/useAxios'
 
+const content = ref()
+// const contentHeight = ref()
 const { post } = useAxios()
 const state = reactive({
     classlist: []
@@ -92,6 +95,11 @@ const { tableObject, methods } = useTable({
     }
 })
 
+/**
+ * 
+ * @param type 'insert' | 'update'
+ * @param row list_row
+ */
 const changeArticle = (type = 'insert', row = {}) => {
     customDialog({
         title: type === 'insert' ? '新增' : '修改',
@@ -112,6 +120,9 @@ const getClass = async () => {
     }
 }
 
+// onMounted(() => {
+//     contentHeight.value = content.value.clientHeight - 38
+// })
 
 onBeforeMount(async () => {
     await getClass()
@@ -121,8 +132,11 @@ onBeforeMount(async () => {
 </script>
 
 <style scoped>
-/* .user-manage{
-} */
+.article-manage{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
 .article-search {
     display: flex;
     /* justify-content: space-between; */
@@ -147,6 +161,9 @@ onBeforeMount(async () => {
 }
 
 .article-content{
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
     padding: 15px;
 }
 .article-pagination{

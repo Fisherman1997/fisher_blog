@@ -2,7 +2,7 @@
 	<div id="custom-dialog">
         <ElDialog
             custom-class="custom-dialog-body"
-            v-model="visible"
+            v-model="visibleCom"
             :top="top"
             :width="width"
             :draggable="draggable"
@@ -45,7 +45,7 @@ Emits[
 
 <script setup>
 import { ElDialog } from 'element-plus'
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 
 
 const fullscreen = ref(false)
@@ -58,6 +58,11 @@ const { title, width, draggable, modal, visible } = defineProps({
     visible: { type: Boolean, default: true },
     top: { type: String, default: '8vh' }
 })
+
+const visibleCom = computed(() => {
+    return visible
+})
+
 // console.log(scopedSlots)
 const emit = defineEmits(['close'])
 

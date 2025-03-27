@@ -59,7 +59,7 @@ const route = useRoute()
 const router = useRouter()
 const routeList = reactive({list: []})
 const { lefState } = defineProps({
-    lefState: Boolean
+    lefState: { type: Boolean, default: true }
 })
 
 const portrait = computed(() => {

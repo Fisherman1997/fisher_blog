@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Like, Repository } from 'typeorm'
 import { RandomWrite } from '../../../db/entities/RandomWrite'
 import { FileService } from '../file/file.service'
-import { formatTime } from '../../../common/commonly.fun'
+import { assignProps, formatTime } from '../../../common/commonly.fun'
 import {RandomWriteFindParam, RandomWriteInsertParam, RandomWriteUpdateParam} from "./model/RandomWrite.param";
 import {PageRsult} from "../../../model/BaseRsult";
 import {IdParam} from "../../../model/BaseParam";
@@ -19,9 +19,10 @@ export class RandomWriteService {
     // 新增
     async insert(body: RandomWriteInsertParam): Promise<void> {
         const random = new RandomWrite()
-        random.createUserId = body.CreateUserId
+        assignProps(random, body)
+        // random.createUserId = body.CreateUserId
         random.createDate = formatTime()
-        random.content = body.content
+        // random.content = body.content
         random.clicks = 0
         if (body.cover_list) random.cover_list = JSON.stringify(body.cover_list)
         await this.randomWriteRepository.save(random)

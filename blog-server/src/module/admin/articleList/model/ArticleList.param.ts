@@ -17,7 +17,7 @@ export class InsertArticleParam {
     classId: number;
 
     @IsInt()
-    CreateUserId: number
+    createUserId: number
 }
 
 
