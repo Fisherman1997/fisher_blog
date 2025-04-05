@@ -20,9 +20,11 @@ import { ElAlert } from 'element-plus'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 const iconList = Object.keys(ElementPlusIconsVue)
 
-const emit = defineEmits(['close'])
+const emit = defineEmits<{
+    (e: 'close', payload: (typeof iconList)[number]): void
+}>()
 
-const selectIcon = (icon: string) => {
+const selectIcon = (icon: (typeof iconList)[number]) => {
     emit('close', icon)
 }
 </script>

@@ -1,39 +1,41 @@
-# blog-admin-ts
+## 博客后台管理 vue + vite + ts
 
-This template should help get you started developing with Vue 3 in Vite.
+##### 安装依赖
 
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
+```
 npm install
+//或 yarn install
 ```
 
-### Compile and Hot-Reload for Development
+##### 开发环境运行
 
-```sh
+```
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+##### 打包
 
-```sh
+```
 npm run build
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+##### 项目依赖说明
 
-```sh
-npm run lint
-```
+|    依赖     |       说明        |
+| :---------: | :---------------: |
+|    vue3     | 本项目基于vue开发 |
+| elemen-puls |     主要UI库      |
+|   echarts   |    统计图形库     |
+|    pinia    |  全局的状态管理   |
+|    axios    |     请求工具      |
+
+##### **一些配配置说明.env**
+
+|           KEY            |                说明                 |
+| :----------------------: | :---------------------------------: |
+|         NODE_ENV         | 环境配置(production or development) |
+|   VUE_APP_MASTER_TITLE   |           页面的标题后缀            |
+|     VUE_APP_CAPTCHA      |             验证码链接              |
+|     VUE_APP_BASE_URL     |              接口前缀               |
+|   VUE_APP_HTTP_TIMEOUT   |            请求超时时间             |
+| VUE_APP_LOCALSTORAGE_KEY |          没啥用随便填一点           |

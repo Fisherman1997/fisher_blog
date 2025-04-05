@@ -1,8 +1,8 @@
 <template>
     <div class="power-modula">
         <el-radio-group class="power-modula-header" v-model="range" @change="routeLoadData">
-            <el-radio-button :label="0">后台</el-radio-button>
-            <el-radio-button :label="1">前台</el-radio-button>
+            <el-radio-button :value="0">后台</el-radio-button>
+            <el-radio-button :value="1">前台</el-radio-button>
         </el-radio-group>
         <el-tree
             :data="treeData"
@@ -32,9 +32,7 @@ export interface IPowerModula {
     userId?: number | null
 }
 
-const { userId } = withDefaults(defineProps<IPowerModula>(), {
-    userId: null,
-})
+const { userId = null } = defineProps<IPowerModula>()
 const emit = defineEmits<{
     (e: 'close', payload: boolean): void
 }>()

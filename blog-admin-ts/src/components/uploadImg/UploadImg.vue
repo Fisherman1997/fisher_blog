@@ -44,10 +44,7 @@ interface IUploadImgProps {
 }
 
 // 使用 withDefaults 配置 props 默认值
-const props = withDefaults(defineProps<IUploadImgProps>(), {
-    size: '100px',
-    amount: 3,
-})
+const { size = '100px', amount = 3, urlList } = defineProps<IUploadImgProps>()
 
 export type ImgDeleteParam = {
     type: boolean
@@ -67,7 +64,6 @@ const dataList = reactive({ state: [] as Array<string | File> })
 const imgList = reactive({ list: [] as string[] })
 
 const file = ref<HTMLInputElement | null>(null)
-const { size, amount, urlList } = props
 
 onBeforeMount(() => {
     // 初始化 dataList，注意这里解构 urlList 得到数组副本

@@ -10,18 +10,28 @@
                         :default-active="menuActive"
                         :collapse="!lefState"
                         :router="true"
-                        class="el-menu-vertical-demo">
+                        class="el-menu-vertical-demo"
+                    >
                         <template v-for="item in listData">
-                            <el-sub-menu v-if="item.children && item.children.length" :index="('/admin' + item.path)" :key="item.path">
+                            <el-sub-menu
+                                v-if="item.children && item.children.length"
+                                :index="'/admin' + item.path"
+                                :key="item.path"
+                            >
                                 <template #title>
                                     <el-icon v-if="item.iconType">
                                         <component :is="item.iconType" />
                                     </el-icon>
                                     <span>{{ item.title }}</span>
                                 </template>
-                                <el-menu-item v-for="cItem in item.children" :index="('/admin' + cItem.path)" :key="cItem.path">{{ cItem.title }}</el-menu-item>
+                                <el-menu-item
+                                    v-for="cItem in item.children"
+                                    :index="'/admin' + cItem.path"
+                                    :key="cItem.path"
+                                    >{{ cItem.title }}</el-menu-item
+                                >
                             </el-sub-menu>
-                            <el-menu-item v-else :index="('/admin' + item.path)" :key="(item.path + 1)">
+                            <el-menu-item v-else :index="'/admin' + item.path" :key="item.path + 1">
                                 <el-icon v-if="item.iconType">
                                     <component :is="item.iconType" />
                                 </el-icon>
@@ -45,11 +55,11 @@ import type { IServiceRouter } from '@/routers/router.store'
 const route = useRoute()
 const userInfo = useUserStore()
 const { lefState } = defineProps({
-    lefState: Boolean
+    lefState: Boolean,
 })
 
-const loadData = reactive<{route: IServiceRouter[]}>({
-    route: []
+const loadData = reactive<{ route: IServiceRouter[] }>({
+    route: [],
 })
 
 const menuActive = computed(() => {
@@ -73,20 +83,19 @@ const listData = computed(() => loadData.route)
 // })
 
 onMounted(() => {
-    getRouterList(userInfo.info.id as number)
-    .then(data => {
+    getRouterList(userInfo.info.id as number).then((data) => {
         if (!data) return
-        const list = data.result.filter(item => {
+        const list = data.result.filter((item) => {
             // console.log(`${item.title}---> range:${item.range},menu:${item.menu},${item.range === 0 && item.menu === 1}`)
             return item.range === 0 && item.menu === 1
         })
-        loadData.route = [ ...list ]
+        loadData.route = [...list]
     })
 })
 </script>
 
 <style scoped>
-.left-nav{
+.left-nav {
     /* display: flex; */
     width: calc(100% - 40px) !important;
     height: calc(100% - 40px) !important;
@@ -94,7 +103,7 @@ onMounted(() => {
     border-radius: 15px;
     margin: 10px;
     padding: 10px;
-    box-shadow: 2px 2px 10px rgba(0,0,0,.25);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.25);
 }
 .left-nav-header {
     height: 40px;
@@ -103,10 +112,10 @@ onMounted(() => {
     height: calc(100% - 40px);
     border-top: 1px solid rgb(205, 230, 238);
 }
-.left-content .el-menu{
+.left-content .el-menu {
     border-right: none;
 }
-.left-nav-header{
+.left-nav-header {
     padding-left: 40px;
     margin-bottom: 15px;
     line-height: 40px;
@@ -114,8 +123,8 @@ onMounted(() => {
     font-weight: bold;
     font-style: italic;
     color: #13a3ed;
-    background-image: url('/src/assets/logo.png') ;
-    background-size: contain ;
+    background-image: url('/src/assets/logo.png');
+    background-size: contain;
     background-repeat: no-repeat;
     /* border-bottom: 1px solid #333; */
 }
@@ -123,13 +132,13 @@ onMounted(() => {
   width: 200px;
   min-height: 400px;
 } */
-.left-nav-aside{
-    transition: all .3s;
+.left-nav-aside {
+    transition: all 0.3s;
 }
-.win250{
+.win250 {
     width: 250px !important;
 }
-.win80{
+.win80 {
     width: 100px !important;
 }
 </style>

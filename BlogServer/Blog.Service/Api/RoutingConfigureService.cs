@@ -20,7 +20,7 @@ namespace Blog.Service.Api
         {
             if (param.SerialNumber == null || param.SerialNumber == 0)
             { 
-                var count = await Db.Queryable<RoutingConfigureInsertParam>().CountAsync();
+                var count = await Db.Queryable<RoutingConfigureEnity>().CountAsync();
                 param.SerialNumber = count + 1;
             }
             //var element = new RoutingConfigureEnity
@@ -37,6 +37,8 @@ namespace Blog.Service.Api
             //};
             var element = new RoutingConfigureEnity();
             CommonFun.AssignProps(element, param);
+            Console.WriteLine(param.IconType);
+            Console.WriteLine(element.IconType);
             await Db.Storageable(element).ExecuteCommandAsync();
         }
 

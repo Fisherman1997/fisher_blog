@@ -36,7 +36,7 @@ const url = reactive({
         name: '修改',
     },
 })
-const { type, row } = withDefaults(defineProps<ICustomDialogProps<ICustom>>(), {})
+const { type, row } = defineProps<ICustomDialogProps<ICustom>>()
 const emit = defineEmits(['close'])
 
 const { formData, formRef, rules, submitForm, formDataSet } = useForm<ICustom>(

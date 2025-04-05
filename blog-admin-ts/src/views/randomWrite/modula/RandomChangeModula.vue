@@ -45,7 +45,7 @@ const url = reactive({
         name: '修改',
     },
 })
-const { type, row } = withDefaults(defineProps<ICustomDialogProps<IRandomWrite>>(), {})
+const { type = 'insert', row } = defineProps<ICustomDialogProps<IRandomWrite>>()
 const emit = defineEmits(['close'])
 
 const { formData, formRef, rules, submitForm, formDataSet } = useForm<IRandomWrite>(
@@ -101,7 +101,8 @@ const deleteFile = (value: ImgDeleteParam) => {
     formDataSet('cover_list', value.result as string[])
 }
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
+    if (type === 'insert') return
     formDataSet('cover_list', row!.cover_list)
     formDataSet('content', row!.content)
 })

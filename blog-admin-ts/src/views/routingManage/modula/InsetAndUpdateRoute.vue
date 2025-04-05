@@ -6,8 +6,8 @@
                 v-model="primaryBol"
                 @change="primaryChange"
             >
-                <el-radio-button :label="false">一级路由</el-radio-button>
-                <el-radio-button :label="true">二级路由</el-radio-button>
+                <el-radio-button :value="false">一级路由</el-radio-button>
+                <el-radio-button :value="true">二级路由</el-radio-button>
             </el-radio-group>
         </div>
         <el-form ref="formRef" :model="formData" :rules="rules" label-width="180px">
@@ -37,7 +37,7 @@
             </el-form-item>
             <el-form-item label="范围：" prop="range">
                 <el-switch
-                    v-model="formData.range"
+                    v-model="isRange"
                     size="large"
                     style="--el-switch-off-color: #13ce66"
                     @change="primaryLoadData"
@@ -48,7 +48,7 @@
             </el-form-item>
             <el-form-item label="是否菜单：" prop="menu">
                 <el-switch
-                    v-model="formData.menu"
+                    v-model="isMenu"
                     size="large"
                     inline-prompt
                     style="--el-switch-off-color: #13ce66"
@@ -123,8 +123,11 @@ interface FromParam {
 }
 
 const status = ref(true)
+const isMenu = ref(true)
+const isRange = ref(true)
+
 const { post } = useAxios()
-const { formData, formRef, rules, submitForm } = useForm<FromParam>(
+const { formData, formRef, rules, submitForm, formDataSet } = useForm<FromParam>(
     {
         primary_id: '',
         title: '',
@@ -132,8 +135,8 @@ const { formData, formRef, rules, submitForm } = useForm<FromParam>(
         path: '',
         component: '',
         serialNumber: null,
-        range: 0,
-        menu: 0,
+        range: 1,
+        menu: 1,
         iconType: '',
         redirect: '',
         status: 1,
@@ -153,14 +156,19 @@ const primaryList = reactive({
     list: [] as FromParam[],
 })
 
-const { type, row } = withDefaults(defineProps<ICustomDialogProps<IRoutingModule>>(), {
-    type: 'insert',
-})
+const { type = 'insert', row } = defineProps<ICustomDialogProps<IRoutingModule>>()
 
 const emit = defineEmits(['close'])
 
 watch(status, () => {
     formData.status = status.value ? 1 : 2
+})
+
+watch(isMenu, () => {
+    formData.menu = isMenu.value ? 1 : 0
+})
+watch(isRange, () => {
+    formData.range = isRange.value ? 1 : 0
 })
 
 const selectIcon = () => {
@@ -185,10 +193,7 @@ const params = async (): Promise<RequestParams<FromParam> | void> => {
             return
         }
     } else delete element.primary_id
-    if (type === 'update') element.id = row.id
-    element.range = formData.range ? 1 : 0
-    element.menu = formData.menu ? 1 : 0
-    element.status = formData.status ? 1 : 2
+    if (type === 'update') element.id = row!.id
     return {
         url,
         element,
@@ -223,8 +228,13 @@ const primaryLoadData = async () => {
 onBeforeMount(() => {
     primaryLoadData()
     if (type === 'update') {
-        assignProps(formData, row)
-        primaryBol.value = row.primary_id ? true : false
+        assignProps(formData, row!)
+        formDataSet('serialNumber', row?.serialNumber as number)
+        status.value = formData.status === 1 ? true : false
+        isMenu.value = formData.menu === 1 ? true : false
+        isRange.value = formData.range === 1 ? true : false
+        console.log(formData.menu)
+        primaryBol.value = row!.primary_id ? true : false
     }
 })
 </script>

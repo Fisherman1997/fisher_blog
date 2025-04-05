@@ -1,63 +1,15 @@
+/* eslint-disable */
 <template>
-    <div class="links">
-        <div class="links-search">
-            <el-button type="primary" @click="changeLinks('insert')">新增</el-button>
-        </div>
-        <div class="links-content">
-            <el-table :border="true" :data="tableObject.tableList">
-                <el-table-column
-                    type="index"
-                    label="序"
-                    :index="(index: number) => index + 1"
-                    width="60px"
-                    algin="center"
-                />
-                <el-table-column prop="name" label="名称">
-                    <template #default="props">
-                        <el-space>
-                            <span>{{ props.row.name }}</span>
-                            <el-tag v-if="props.row.status === 1" class="ml-2" type="success"
-                                >有效</el-tag
-                            >
-                            <el-tag v-else class="ml-2" type="danger">失效</el-tag>
-                        </el-space>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="http_url" label="网址" />
-                <el-table-column label="操作" width="180px" algin="center">
-                    <template #default="props">
-                        <el-button type="primary" @click="changeLinks('update', props.row)" link
-                            >修改</el-button
-                        >
-                        <el-popconfirm
-                            title="确认删除吗？"
-                            @confirm="methods.deleteData(props.row.id)"
-                        >
-                            <template #reference>
-                                <el-button type="danger" link>删除</el-button>
-                            </template>
-                        </el-popconfirm>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                class="links-pagination"
-                small
-                background
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="tableObject.total"
-                :page-sizes="[10, 20, 30, 100]"
-                v-model:currentPage="tableObject.page"
-                v-model:pageSize="tableObject.pageNum"
-            />
-        </div>
-    </div>
+    <QuickTable :-quick-table-props="quickTableParam" />
 </template>
 
-<script setup lang="ts">
+<script setup lang="tsx">
+import QuickTable from '@/components/quickTable/index'
 import customDialog from '@/components/customDialog/CustomDialog'
 import linksChangeModula from './modula/linksChangeModula.vue'
-import { useTable } from '@/hooks/useTable.js'
+import type { IQuickTableProps } from '@/components/quickTable/QuickTable.vue'
+import { reactive } from 'vue'
+import { ElSpace, ElTag } from 'element-plus'
 
 export interface ILink {
     avatar: string
@@ -68,26 +20,83 @@ export interface ILink {
     status: number | boolean
 }
 
-const { tableObject, methods } = useTable<ILink, never>({
-    url: {
+const quickTableParam = reactive<IQuickTableProps<ILink>>({
+    requestUrl: {
         find: 'links/list',
         delete: 'links/delete',
     },
-    pagination: true,
-    isLoad: true,
+    isSearch: true,
+    isPagination: true,
+    columns: [
+        {
+            label: '标题',
+            prop: 'name',
+            type: 'custom',
+            align: 'left',
+            customFun: (row) => {
+                return (
+                    <ElSpace>
+                        <span>{row.name}</span> {/* ✅ 直接写 JSX，不要外层包裹 `{}` */}
+                        {row.status === 1 ? (
+                            <ElTag class="ml-2" type="success">
+                                有效
+                            </ElTag>
+                        ) : (
+                            <ElTag class="ml-2" type="danger">
+                                失效
+                            </ElTag>
+                        )}
+                    </ElSpace>
+                )
+            },
+        },
+        { label: '网址', prop: 'http_url', type: 'langtext', align: 'center' },
+        {
+            label: '操作',
+            type: 'edit',
+            edit: [
+                {
+                    title: '修改',
+                    type: 'button',
+                    handle: <T extends ILink>(row?: T) => changeLinks('update', row),
+                },
+                {
+                    title: '删除',
+                    type: 'delete',
+                },
+            ],
+            align: 'center',
+        },
+    ],
+    search: [
+        {
+            label: '标题',
+            key: 'title',
+            type: 'input',
+        },
+        {
+            label: '新增',
+            key: 'add',
+            type: 'button',
+            color: 'primary',
+            handle: () => changeLinks('insert'),
+        },
+    ],
 })
 
 const changeLinks = (type: 'insert' | 'update' = 'insert', row?: ILink) => {
-    customDialog({
-        title: type === 'insert' ? '新增' : '修改',
-        modal: false,
-        width: '50vw',
-        component: linksChangeModula,
-        componentProps: { type, row },
-        open: (result) => {
-            if (!result) return
-            methods.loadData()
-        },
+    return new Promise((resolve) => {
+        customDialog({
+            title: type === 'insert' ? '新增' : '修改',
+            modal: false,
+            width: '50vw',
+            component: linksChangeModula,
+            componentProps: { type, row },
+            open: (result) => {
+                if (!result) return
+                resolve(result)
+            },
+        })
     })
 }
 </script>

@@ -2,16 +2,18 @@
     <div id="custom-dialog">
         <ElDialog
             class="custom-dialog-body"
-            v-model="visibleComputed"
-            :top="top"
+            v-model="visible"
+            :top="modalTop"
             :width="width"
             :draggable="draggable"
             :modal="modal"
             :fullscreen="fullscreen"
             :show-close="false"
             destroy-on-close
+            @closed="close"
             :close-on-press-escape="false"
             :close-on-click-modal="false"
+            :align-center="alignCenter"
         >
             <slot></slot>
             <template #header="{}">
@@ -26,7 +28,7 @@
                         <span v-else @click="fullscreen = true"
                             ><ElIcon><FullScreen /></ElIcon
                         ></span>
-                        <span @click="close"
+                        <span @click="visible = false"
                             ><ElIcon><Close /></ElIcon
                         ></span>
                     </div>
@@ -60,31 +62,32 @@ interface ICustomDialogVNodeProps {
     width?: string
     draggable?: boolean
     modal?: boolean
-    visible?: boolean
     top?: string
+    alignCenter?: boolean
 }
-
+const visible = ref(true)
 const fullscreen = ref(false)
 
-const { title, width, draggable, modal, visible } = withDefaults(
-    defineProps<ICustomDialogVNodeProps>(),
-    {
-        title: '弹窗',
-        width: '30%',
-        draggable: true,
-        modal: true,
-        visible: true,
-        top: '8vh',
-    },
-)
+const {
+    title = '弹窗',
+    width = '30%',
+    draggable = true,
+    modal = true,
+    alignCenter = false,
+    top = '8vh',
+} = defineProps<ICustomDialogVNodeProps>()
 
-const visibleComputed = computed(() => {
-    return visible
+const modalTop = computed(() => {
+    return alignCenter ? undefined : top
 })
+
 // console.log(scopedSlots)
-const emit = defineEmits(['close'])
+const emit = defineEmits<{
+    (e: 'close'): void
+}>()
 
 const close = () => {
+    visible.value = false
     emit('close')
 }
 

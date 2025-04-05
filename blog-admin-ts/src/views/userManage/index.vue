@@ -1,110 +1,111 @@
 <template>
-    <div class="user-manage">
-        <div class="user-search">
-            <ul>
-                <li>
-                    <span>名称：</span>
-                    <el-input v-model="tableObject.params.name" />
-                </li>
-                <li>
-                    <el-button type="primary" plain @click="methods.loadData">查询</el-button>
-                </li>
-            </ul>
-            <el-button type="primary" @click="changeUser('insert')">新增</el-button>
-        </div>
-        <div class="user-content">
-            <el-table :border="true" :data="tableObject.tableList">
-                <el-table-column
-                    type="index"
-                    label="序"
-                    :index="(index: number) => index + 1"
-                    width="60px"
-                    align="center"
-                />
-                <el-table-column prop="name" label="名称">
-                    <template #default="props">
-                        <el-space>
-                            <span>{{ props.row.name }}</span>
-                            <el-tag v-if="props.row.status === 1" class="ml-2" type="success"
-                                >启用</el-tag
-                            >
-                            <el-tag v-else class="ml-2" type="danger">禁用</el-tag>
-                        </el-space>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="code" label="账号" />
-                <el-table-column prop="eMail" label="邮箱" />
-                <el-table-column label="操作" align="center">
-                    <template #default="props">
-                        <el-button type="primary" @click="changeUser('update', props.row)" link
-                            >信息</el-button
-                        >
-                        <el-button type="primary" @click="changePower(props.row)" link
-                            >权限</el-button
-                        >
-                        <el-button type="primary" @click="changePasswordFun(props.row)" link
-                            >修改密码</el-button
-                        >
-                        <el-popconfirm
-                            title="确认删除吗？"
-                            @confirm="methods.deleteData(props.row.id)"
-                        >
-                            <template #reference>
-                                <el-button type="danger" link>删除</el-button>
-                            </template>
-                        </el-popconfirm>
-                    </template>
-                </el-table-column>
-            </el-table>
-            <el-pagination
-                class="user-pagination"
-                small
-                background
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="tableObject.total"
-                :page-sizes="[10, 20, 30, 100]"
-                v-model:currentPage="tableObject.page"
-                v-model:pageSize="tableObject.pageNum"
-            />
-        </div>
-    </div>
+    <QuickTable :-quick-table-props="quickTableParam" />
 </template>
 
-<script setup lang="ts">
-import { onBeforeMount } from 'vue'
+<script setup lang="tsx">
+import { reactive } from 'vue'
+import QuickTable from '@/components/quickTable/index'
 import customDialog from '@/components/customDialog/CustomDialog'
 import InsertAndUpdateUser from './modula/InsertAndUpdateUser.vue'
 import ChangePassword, { type IChangePasswordProps } from './modula/ChangePassword.vue'
 import PowerModula, { type IPowerModula } from './modula/PowerModula.vue'
-import { useTable } from '@/hooks/useTable.js'
 import type { IUserInfo } from '@/store/user.store'
+import type { IQuickTableProps } from '@/components/quickTable/QuickTable.vue'
+import { ElSpace, ElTag } from 'element-plus'
 
 // interface
 
-interface ITableParam {
-    name: string
-}
+// interface ITableParam {
+//     name: string
+// }
 
-const { tableObject, methods } = useTable<IUserInfo, ITableParam>({
-    url: {
+const quickTableParam = reactive<IQuickTableProps<IUserInfo>>({
+    requestUrl: {
         find: 'user/list',
         delete: 'user/delete',
     },
-    pagination: true,
-    isLoad: true,
-})
-
-const changeUser = (type: 'insert' | 'update' = 'insert', row?: IUserInfo) => {
-    customDialog<IUserInfo>({
-        title: type === 'insert' ? '新增' : '修改',
-        modal: false,
-        width: '600px',
-        component: InsertAndUpdateUser,
-        componentProps: { type, row },
-        open: (result) => {
-            if (!result) return
-            methods.loadData()
+    isSearch: true,
+    isPagination: true,
+    columns: [
+        {
+            label: '名称',
+            prop: 'name',
+            type: 'custom',
+            align: 'left',
+            customFun: (row) => {
+                return (
+                    <ElSpace>
+                        <span>{row.name}</span>
+                        {row.status === 1 ? (
+                            <ElTag class="ml-2" type="success">
+                                启用
+                            </ElTag>
+                        ) : (
+                            <ElTag class="ml-2" type="danger">
+                                禁用
+                            </ElTag>
+                        )}
+                    </ElSpace>
+                )
+            },
         },
+        { label: '账号', prop: 'code', type: 'string', align: 'left' },
+        { label: '邮箱', prop: 'eMail', type: 'string', align: 'left' },
+        {
+            label: '操作',
+            type: 'edit',
+            edit: [
+                {
+                    title: '信息',
+                    type: 'button',
+                    handle: <T extends IUserInfo>(row?: T) => changeUser('update', row),
+                },
+                {
+                    title: '权限',
+                    type: 'button',
+                    handle: <T extends IUserInfo>(row?: T) => changePower(row!),
+                },
+                {
+                    title: '修改密码',
+                    type: 'button',
+                    handle: <T extends IUserInfo>(row?: T) => changePasswordFun(row!),
+                },
+                {
+                    title: '删除',
+                    type: 'delete',
+                },
+            ],
+            align: 'center',
+        },
+    ],
+    search: [
+        {
+            label: '名称',
+            key: 'name',
+            type: 'input',
+        },
+        {
+            label: '新增',
+            key: 'add',
+            type: 'button',
+            color: 'primary',
+            handle: () => changeUser('insert'),
+        },
+    ],
+})
+const changeUser = (type: 'insert' | 'update' = 'insert', row?: IUserInfo) => {
+    return new Promise((resolve) => {
+        customDialog<IUserInfo>({
+            title: type === 'insert' ? '新增' : '修改',
+            modal: false,
+            width: '600px',
+            component: InsertAndUpdateUser,
+            componentProps: { type, row },
+            open: (result) => {
+                if (!result) return
+                resolve(result)
+            },
+        })
     })
 }
 
@@ -120,6 +121,7 @@ const changePower = (row: IUserInfo) => {
             console.log('修改权限')
         },
     })
+    return Promise.resolve(false)
 }
 
 const changePasswordFun = (row: IUserInfo) => {
@@ -133,11 +135,8 @@ const changePasswordFun = (row: IUserInfo) => {
             console.log('修改密码')
         },
     })
+    return Promise.resolve(false)
 }
-
-onBeforeMount(() => {
-    tableObject.params.name = ''
-})
 </script>
 
 <style scoped>

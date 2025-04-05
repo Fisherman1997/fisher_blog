@@ -39,9 +39,7 @@ interface FromParam {
     name: string
 }
 
-const { type, row } = withDefaults(defineProps<IClassChangeModulaProps>(), {
-    type: 'insert',
-})
+const { type = 'insert', row } = defineProps<IClassChangeModulaProps>()
 
 const emit = defineEmits(['close'])
 
@@ -56,7 +54,7 @@ const { formData, formRef, rules, submitForm } = useForm<FromParam>(
 
 const elementFun = async () => {
     const element = { ...formData }
-    if (type === 'update') element.id = row.id
+    if (type === 'update') element.id = row!.id
     return {
         url: url[type].path,
         element,
@@ -73,8 +71,8 @@ const resultFun = (param: boolean) => {
 
 onBeforeMount(() => {
     if (type === 'update') {
-        formData.id = row.id
-        formData.name = row.name
+        formData.id = row!.id
+        formData.name = row!.name
     }
 })
 </script>

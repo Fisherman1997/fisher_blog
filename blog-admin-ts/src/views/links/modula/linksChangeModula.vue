@@ -54,7 +54,7 @@ const url = reactive({
 //     status: boolean
 // }
 
-const { type, row } = withDefaults(defineProps<ICustomDialogProps<ILink>>(), {})
+const { type = 'insert', row } = defineProps<ICustomDialogProps<ILink>>()
 
 const emit = defineEmits(['close'])
 

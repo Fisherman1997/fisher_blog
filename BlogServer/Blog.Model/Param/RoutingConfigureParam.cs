@@ -5,10 +5,12 @@ namespace Blog.Model.Param
 {
     public class RoutingConfigureInsertParam
     {
+        public int? Primary_id { get; set; }
         public required string Name { get; set; }
         public required string Title { get; set; }
         public required string Path { get; set; }
         public required string Component { get; set; }
+        public required string IconType { get; set; }
         public required RangeEnum Range { get; set; }
         public required MenuEnum Menu { get; set; }
         public required string Redirect { get; set; }

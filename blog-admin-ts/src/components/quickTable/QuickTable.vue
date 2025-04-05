@@ -68,9 +68,11 @@
                             :xl="1"
                         >
                             <el-form-item>
-                                <el-button type="warning" @click="item.handle!()">{{
-                                    item.label
-                                }}</el-button>
+                                <el-button
+                                    :type="item.color || ''"
+                                    @click="handleSearch(item.handle!)"
+                                    >{{ item.label }}</el-button
+                                >
                             </el-form-item>
                         </el-col>
                     </template>
@@ -89,12 +91,13 @@
         </div>
 
         <!-- 表格区域 -->
-        <div class="QuickTable-content">
+        <div class="QuickTable-content" :style="styleObject">
             <el-table
                 style="height: calc(100% - 40px)"
                 :border="true"
                 order="true"
                 :data="tableObject.tableList"
+                :size="QuickTableProps.tableSize || ''"
             >
                 <el-table-column
                     type="index"
@@ -107,16 +110,42 @@
                     <!-- 普通文本列 -->
                     <el-table-column
                         v-if="item.type === 'string'"
-                        :prop="item.prop"
+                        :prop="<string>item.prop"
                         :label="item.label"
                         :width="item.width"
                         :align="item.align"
                     />
 
+                    <!-- 长文本列 -->
+                    <el-table-column
+                        v-else-if="item.type === 'langtext'"
+                        :prop="<string>item.prop"
+                        :label="item.label"
+                        :width="item.width"
+                        :align="item.align"
+                    >
+                        <template #default="{ row }">
+                            <el-text truncated>{{ row[item.prop as string] }}</el-text>
+                        </template>
+                    </el-table-column>
+
+                    <!-- 自定义 -->
+                    <el-table-column
+                        v-else-if="item.type === 'custom'"
+                        :prop="<string>item.prop"
+                        :label="item.label"
+                        :width="item.width"
+                        :align="item.align"
+                    >
+                        <template #default="{ row }">
+                            <component :is="item.customFun!(row)" />
+                        </template>
+                    </el-table-column>
+
                     <!-- 时间列（支持动态字段） -->
                     <el-table-column
                         v-else-if="item.type === 'time'"
-                        :prop="item.prop"
+                        :prop="<string>item.prop"
                         :label="item.label"
                         :width="item.width"
                         :align="item.align"
@@ -183,22 +212,25 @@
     </div>
 </template>
 
-<script setup lang="ts" generic="P, T extends IQuickTableColumn<P>[]">
+<script setup lang="ts" generic="P">
 import { useTable } from '@/hooks/useTable.js'
+import { reactive } from 'vue'
+import type { JSX } from 'vue/jsx-runtime'
 // import { onMounted, ref } from 'vue'
 
 export interface IQuickTableColumn<P> {
-    type: 'string' | 'time' | 'edit'
-    prop?: string
+    type: 'string' | 'time' | 'edit' | 'langtext' | 'custom'
+    prop?: keyof P
     label: string
     edit?: {
         type: 'button' | 'popconfirm' | 'delete'
         title: string
         message?: string
-        handle?: (row?: P) => Promise<unknown | boolean>
+        handle?: (row?: P) => Promise<unknown | boolean> // 返回一个布尔值，true刷新表格，false则不刷新
     }[]
     width?: `${string}px`
     align: 'center' | 'left' | 'right'
+    customFun?: (row: P) => JSX.Element
 }
 
 export interface ITableApiUrl {
@@ -206,33 +238,46 @@ export interface ITableApiUrl {
     delete?: string
 }
 
-export interface IQuickTableProps<P, T extends IQuickTableColumn<P>[]> {
+export interface IQuickTableProps<P> {
     requestUrl: ITableApiUrl
     isSearch?: boolean
-    columns: T
+    columns: IQuickTableColumn<P>[]
     isPagination?: boolean
     search?: {
         type: 'input' | 'button' | 'select'
+        color?: '' | 'text' | 'default' | 'success' | 'warning' | 'info' | 'primary' | 'danger'
         label: string
-        key: keyof P
-        handle?: () => void
+        key: keyof P | string
+        handle?: () => Promise<unknown | boolean> // 返回一个布尔值，true刷新表格，false则不刷新
         select?: { id: number | string; name: string }[]
     }[]
+    tableMaxWidth?: `${number}px`
+    tableMinWidth?: `${number}px`
+    tableSize?: '' | 'large' | 'default' | 'small'
+    tableIsLoad?: boolean
 }
 
-const { QuickTableProps } = withDefaults(
-    defineProps<{ QuickTableProps: IQuickTableProps<P, T> }>(),
-    {},
-)
-
+const { QuickTableProps } = defineProps<{ QuickTableProps: IQuickTableProps<P> }>()
 const { tableObject, methods } = useTable<P, never>({
     url: {
         find: QuickTableProps.requestUrl.find,
         delete: QuickTableProps.requestUrl.delete,
     },
-    pagination: QuickTableProps.isPagination || true,
-    isLoad: true,
+    pagination: QuickTableProps.isPagination,
+    isLoad: typeof QuickTableProps.tableIsLoad === 'undefined' ? true : QuickTableProps.tableIsLoad,
 })
+
+const styleObject = reactive({
+    maxWidth: QuickTableProps.tableMaxWidth || 'none',
+    minWidth: QuickTableProps.tableMinWidth || 'auto',
+})
+
+const handleSearch = (handle: () => Promise<unknown | boolean>) => {
+    handle().then((data) => {
+        if (typeof data !== 'boolean') return
+        if (data) methods.loadData()
+    })
+}
 
 const handleTable = (handle: (row?: P) => Promise<unknown | boolean>, row: P) => {
     handle(row).then((data) => {

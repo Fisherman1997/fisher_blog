@@ -3,13 +3,13 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, reactive } from 'vue'
+import { onBeforeMount, reactive, ref } from 'vue'
 import customDialog from '@/components/customDialog/CustomDialog'
 import QuickTable from '@/components/quickTable/index'
 import ArticleChangeModula from './modula/ArticleChangeModula.vue'
 import { type IClassData } from '@/views/classManage/index.vue'
 import { useAxios } from '@/hooks/useAxios'
-import type { IQuickTableColumn, IQuickTableProps } from '@/components/quickTable/QuickTable.vue'
+import type { IQuickTableProps } from '@/components/quickTable/QuickTable.vue'
 import { watch } from 'vue'
 
 export interface IArticle {
@@ -21,11 +21,9 @@ export interface IArticle {
     content: string | null
 }
 
-const state = reactive({
-    classlist: [] as IClassData[],
-})
+const classlist = ref<IClassData[]>([])
 
-const quickTableParam = reactive<IQuickTableProps<IArticle, IQuickTableColumn<IArticle>[]>>({
+const quickTableParam = reactive<IQuickTableProps<IArticle>>({
     requestUrl: {
         find: 'article/list',
         delete: 'article/delete',
@@ -33,12 +31,13 @@ const quickTableParam = reactive<IQuickTableProps<IArticle, IQuickTableColumn<IA
     isSearch: true,
     isPagination: true,
     columns: [
-        { label: '标题', prop: 'title', type: 'string', align: 'left' },
-        { label: '创建时间', prop: 'createDate', type: 'time', align: 'center' },
-        { label: '点击数', prop: 'clicks', type: 'string', align: 'center' },
+        { label: '标题', prop: 'title', type: 'langtext', align: 'left' },
+        { label: '创建时间', prop: 'createDate', type: 'time', width: '200px', align: 'center' },
+        { label: '点击数', prop: 'clicks', type: 'string', width: '80px', align: 'center' },
         {
             label: '操作',
             type: 'edit',
+            width: '180px',
             edit: [
                 {
                     title: '修改',
@@ -63,7 +62,14 @@ const quickTableParam = reactive<IQuickTableProps<IArticle, IQuickTableColumn<IA
             label: '分类',
             key: 'classId',
             type: 'select',
-            select: state.classlist,
+            select: classlist.value,
+        },
+        {
+            label: '新增',
+            key: 'add',
+            type: 'button',
+            color: 'primary',
+            handle: () => changeArticle('insert'),
         },
     ],
 })
@@ -98,14 +104,14 @@ const changeArticle = (type: 'insert' | 'update' = 'insert', row?: IArticle) => 
 const getClass = async () => {
     const data = await post<IClassData[], { name: string }>('class/list', { name: '' })
     if (data && data.statusCode === 200) {
-        state.classlist = data.result
+        classlist.value = data.result
     }
 }
 
 watch(
-    () => state.classlist,
+    () => classlist.value,
     () => {
-        quickTableParam.search![1].select = [...state.classlist]
+        quickTableParam.search![1].select = [...classlist.value]
     },
 )
 
@@ -114,43 +120,4 @@ onBeforeMount(async () => {
 })
 </script>
 
-<style scoped>
-.article-manage {
-    display: flex;
-    /* height: 100%; */
-    flex-direction: column;
-}
-.article-search {
-    display: flex;
-    /* justify-content: space-between; */
-    align-items: center;
-    width: calc(100% - 30px);
-    padding: 20px 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgb(216, 216, 216);
-}
-.article-search ul {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-.article-search ul li {
-    display: flex;
-    margin-right: 20px;
-    align-items: center;
-}
-.article-search ul li > span {
-    display: inline-block;
-    width: 60px;
-}
-
-.article-content {
-    overflow: hidden;
-    flex: 1;
-    padding: 15px;
-}
-.article-pagination {
-    margin-top: 15px;
-    justify-content: end;
-}
-</style>
+<style scoped></style>

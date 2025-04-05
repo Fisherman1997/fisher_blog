@@ -29,6 +29,7 @@
     "@tsconfig/node22": "^22.0.0",
     "@types/node": "^22.13.11",
     "@types/prismjs": "^1.26.5",
+    "@typescript-eslint/parser": "^8.29.0",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "@vue/eslint-config-prettier": "^10.2.0",

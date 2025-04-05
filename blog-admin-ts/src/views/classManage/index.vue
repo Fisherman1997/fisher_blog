@@ -1,119 +1,80 @@
 <template>
-    <div class="class-manage">
-        <div class="class-search">
-            <ul>
-                <li>
-                    <span>名称：</span>
-                    <el-input v-model="tableObject.params.name" />
-                </li>
-                <li>
-                    <el-button type="primary" plain @click="methods.loadData">查询</el-button>
-                </li>
-            </ul>
-            <el-button type="primary" @click="changeUser('insert')">新增</el-button>
-        </div>
-        <div class="class-content">
-            <el-table :border="true" :data="tableObject.tableList">
-                <el-table-column
-                    type="index"
-                    label="序"
-                    :index="(index: number) => index + 1"
-                    width="60px"
-                    align="center"
-                />
-                <el-table-column prop="name" label="分类名称" />
-                <el-table-column label="操作">
-                    <template #default="props">
-                        <el-button type="primary" @click="changeUser('update', props.row)" link
-                            >修改</el-button
-                        >
-                        <el-popconfirm
-                            title="确认删除吗？"
-                            @confirm="methods.deleteData(props.row.id)"
-                        >
-                            <template #reference>
-                                <el-button type="danger" link>删除</el-button>
-                            </template>
-                        </el-popconfirm>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
-    </div>
+    <QuickTable :-quick-table-props="quickTableParam" />
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from 'vue'
+import { reactive } from 'vue'
+import QuickTable from '@/components/quickTable/index'
 import customDialog from '@/components/customDialog/CustomDialog'
 import ClassChangeModula, { type IClassChangeModulaProps } from './modula/ClassChangeModula.vue'
-import { useTable } from '@/hooks/useTable.js'
+import type { IQuickTableProps } from '@/components/quickTable/QuickTable.vue'
 
 export interface IClassData {
     id: number
     name: string
 }
 
-const { tableObject, methods } = useTable<IClassData, { name: string }>({
-    url: {
+const quickTableParam = reactive<IQuickTableProps<IClassData>>({
+    requestUrl: {
         find: 'class/list',
         delete: 'class/delete',
     },
-    pagination: false,
-    isLoad: true,
+    isSearch: true,
+    isPagination: false,
+    tableMaxWidth: '1000px',
+    tableMinWidth: '300px',
+    columns: [
+        { label: '名称', prop: 'name', type: 'langtext', align: 'left' },
+        {
+            label: '操作',
+            type: 'edit',
+            width: '180px',
+            edit: [
+                {
+                    title: '修改',
+                    type: 'button',
+                    handle: <T extends IClassData>(row?: T) => changeUser('update', row),
+                },
+                {
+                    title: '删除',
+                    type: 'delete',
+                },
+            ],
+            align: 'left',
+        },
+    ],
+    search: [
+        {
+            label: '名称',
+            key: 'title',
+            type: 'input',
+        },
+        {
+            label: '新增',
+            key: 'add',
+            type: 'button',
+            color: 'primary',
+            handle: () => changeUser('insert'),
+        },
+    ],
 })
 
 const changeUser = (type: 'insert' | 'update', row?: IClassData) => {
-    customDialog<IClassChangeModulaProps>({
-        title: type === 'insert' ? '新增' : '修改',
-        modal: false,
-        width: '600px',
-        component: ClassChangeModula,
-        componentProps: { type, row },
-        open: (result) => {
-            if (!result) return
-            methods.loadData()
-        },
+    return new Promise((resolve) => {
+        customDialog<IClassChangeModulaProps>({
+            title: type === 'insert' ? '新增' : '修改',
+            modal: false,
+            top: '30vh',
+            width: '600px',
+            component: ClassChangeModula,
+            componentProps: { type, row },
+            open: (result) => {
+                if (!result) return
+                resolve(result)
+            },
+        })
     })
 }
-
-onBeforeMount(() => {
-    tableObject.params.name = ''
-})
 </script>
 
-<style scoped>
-/* .user-manage{
-} */
-.class-search {
-    display: flex;
-    /* justify-content: space-between; */
-    align-items: center;
-    padding: 20px 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgb(216, 216, 216);
-}
-.class-search ul {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-.class-search ul li {
-    display: flex;
-    margin-right: 20px;
-    align-items: center;
-}
-.class-search ul li > span {
-    display: inline-block;
-    width: 60px;
-}
-
-.class-content {
-    max-width: 1000px;
-    min-width: 300px;
-    padding: 15px;
-}
-.class-pagination {
-    margin-top: 15px;
-    justify-content: end;
-}
-</style>
+<style scoped></style>

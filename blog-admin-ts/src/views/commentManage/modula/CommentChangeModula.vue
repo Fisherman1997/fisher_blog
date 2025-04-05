@@ -25,8 +25,10 @@ const url = reactive({
         name: '修改',
     },
 })
-const { row } = withDefaults(defineProps<{ row: IComment }>(), {})
-const emit = defineEmits(['close'])
+const { row } = defineProps<{ row: IComment }>()
+const emit = defineEmits<{
+    (e: 'close', payload: boolean): void
+}>()
 
 const { formData, formRef, rules, submitForm, formDataSet } = useForm(
     {

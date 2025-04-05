@@ -66,9 +66,7 @@ export interface IInsertAndUpdateUserProps {
     row?: IUserInfo
 }
 
-const { type, row } = withDefaults(defineProps<IInsertAndUpdateUserProps>(), {
-    type: 'insert',
-})
+const { type = 'insert', row } = defineProps<IInsertAndUpdateUserProps>()
 
 const emit = defineEmits<{
     (e: 'close', payload: boolean): void
@@ -107,7 +105,7 @@ const elementFun = async () => {
     // console.log(url[type].path)
     // return
     if (type === 'update') {
-        element.id = row.id
+        element.id = row!.id
         delete element.password
     }
     element.status = element.status ? 1 : 0
@@ -147,7 +145,7 @@ const deleteFile = (value: ImgDeleteParam) => {
 onBeforeMount(() => {
     if (type === 'update') {
         assignProps(formData, row as typeof formData)
-        formData.status = row.status ? true : false
+        formData.status = row!.status ? true : false
     }
 })
 </script>

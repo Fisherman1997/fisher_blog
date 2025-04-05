@@ -9,7 +9,8 @@
             :src="url"
             @dblclick="close"
             :style="`transform: scale(${imgHeight.scale}) translateY(${imgHeight.Y}px) translateX(${imgHeight.X}px)`"
-            alt="图片"/>
+            alt="图片"
+        />
     </div>
 </template>
 
@@ -30,10 +31,13 @@ const imgHeight = reactive<IImgHeight>({
     X: 0,
     Y: 0,
 })
-const { url, visible } = defineProps({
-    url: { type: String, default: '' },
-    visible: { type: Boolean, default: true },
-})
+
+interface CustomImageProps {
+    url: string
+    visible?: boolean
+}
+
+const { url, visible = true } = defineProps<CustomImageProps>()
 
 // console.log(scopedSlots)
 const emit = defineEmits(['close'])

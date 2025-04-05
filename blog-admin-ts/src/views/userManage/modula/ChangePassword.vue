@@ -27,10 +27,7 @@ export interface IChangePasswordProps {
     userId: number | null
 }
 
-const { userId } = withDefaults(defineProps<IChangePasswordProps>(), {
-    userId: null,
-})
-
+const { userId = null } = defineProps<IChangePasswordProps>()
 const emit = defineEmits<{
     (e: 'close', payload: boolean): void
 }>()

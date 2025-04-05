@@ -77,9 +77,7 @@ const url = reactive({
     classlist: [] as IClassData[],
 })
 
-const { type, row } = withDefaults(defineProps<ICustomDialogProps<IArticle>>(), {
-    type: 'insert',
-})
+const { type = 'insert', row } = defineProps<ICustomDialogProps<IArticle>>()
 
 const emit = defineEmits(['close'])
 
@@ -101,7 +99,7 @@ const { formData, formRef, rules, submitForm, formDataSet } = useForm<IArticleFr
 const elementFun = async () => {
     const element = { ...formData }
 
-    if (type === 'update') element.id = row.id
+    if (type === 'update') element.id = row!.id
     if (type === 'insert') element.createUserId = userInfo.info.id as number
     // if (!element.cover.length) return
 
@@ -161,7 +159,7 @@ const getClass = async () => {
 
 onBeforeMount(async () => {
     await getClass()
-    if (type === 'update') await getArticle(row.id)
+    if (type === 'update') await getArticle(row!.id)
 })
 </script>
 

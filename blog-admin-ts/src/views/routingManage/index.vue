@@ -2,8 +2,8 @@
     <div id="routing-manage">
         <div class="routing-manage-hrader">
             <el-radio-group v-model="tableObject.params.range" @change="methods.loadData">
-                <el-radio-button :label="0">后台路由</el-radio-button>
-                <el-radio-button :label="1">前台路由</el-radio-button>
+                <el-radio-button :value="0">后台路由</el-radio-button>
+                <el-radio-button :value="1">前台路由</el-radio-button>
             </el-radio-group>
             <el-button @click="changeRoute('insert')" type="primary"
                 ><el-icon><Plus /></el-icon> 新增</el-button

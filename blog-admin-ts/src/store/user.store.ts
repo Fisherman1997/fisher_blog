@@ -9,47 +9,46 @@ export interface IUserInfo {
     name: string | null
     eMail: string | null
     status: number | null
-    portrait: string | null,
+    portrait: string | null
     token?: string
 }
 
-
-export const useUserStore = defineStore('userInfo',{
+export const useUserStore = defineStore('userInfo', {
     state: () => {
         // await this.initState()
         return <IUserInfo>{
-          id: null,
-          code: null,
-          name: null,
-          eMail: null,
-          status: null,
-          portrait: null
+            id: null,
+            code: null,
+            name: null,
+            eMail: null,
+            status: null,
+            portrait: null,
         }
     },
     getters: {
-        info(): IUserInfo{
+        info(): IUserInfo {
             const { id, code, name, eMail, status, portrait } = this
             return { id, code, name, eMail, status, portrait }
-        }
+        },
     },
     actions: {
         setUserState(data: IUserInfo) {
             const { id, code, name, eMail, status, portrait } = data
             this.$patch({ id, code, name, eMail, status, portrait })
         },
-        async initState () {
+        async initState() {
             return new Promise((resolve) => {
                 if (!getStorageItem('token')) return
                 checkToken()
-                .then(data => {
-                    if (!data || data.statusCode !== 200) return
-                    this.setUserState(data.result)
-                    resolve(true)
-                })
-                .catch(() => {
-                    ElMessage.warning("登录失效")
-                })
+                    .then((data) => {
+                        if (!data || data.statusCode !== 200) return
+                        this.setUserState(data.result)
+                        resolve(true)
+                    })
+                    .catch(() => {
+                        ElMessage.warning('登录失效')
+                    })
             })
-        }
-    }
+        },
+    },
 })
