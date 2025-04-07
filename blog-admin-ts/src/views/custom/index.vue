@@ -78,37 +78,4 @@ const changeCustom = (type: 'insert' | 'update' = 'insert', row?: ICustom) => {
 }
 </script>
 
-<style scoped>
-/* .user-manage{
-} */
-.custom-search {
-    display: flex;
-    /* justify-content: space-between; */
-    align-items: center;
-    padding: 20px 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgb(216, 216, 216);
-}
-.custom-search ul {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-.custom-search ul li {
-    display: flex;
-    margin-right: 20px;
-    align-items: center;
-}
-.custom-search ul li > span {
-    display: inline-block;
-    width: 60px;
-}
-
-.custom-content {
-    padding: 15px;
-}
-.custom-pagination {
-    margin-top: 15px;
-    justify-content: end;
-}
-</style>
+<style scoped></style>

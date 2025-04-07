@@ -85,37 +85,4 @@ const changeRandom = (type: 'insert' | 'update' = 'insert', row?: IRandomWrite) 
 }
 </script>
 
-<style scoped>
-/* .user-manage{
-} */
-.random-search {
-    display: flex;
-    /* justify-content: space-between; */
-    align-items: center;
-    padding: 20px 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgb(216, 216, 216);
-}
-.random-search ul {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-}
-.random-search ul li {
-    display: flex;
-    margin-right: 20px;
-    align-items: center;
-}
-.random-search ul li > span {
-    display: inline-block;
-    width: 60px;
-}
-
-.random-content {
-    padding: 15px;
-}
-.random-pagination {
-    margin-top: 15px;
-    justify-content: end;
-}
-</style>
+<style scoped></style>

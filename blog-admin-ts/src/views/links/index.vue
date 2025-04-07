@@ -101,23 +101,4 @@ const changeLinks = (type: 'insert' | 'update' = 'insert', row?: ILink) => {
 }
 </script>
 
-<style scoped>
-/* .user-manage{
-} */
-.links-search {
-    display: flex;
-    /* justify-content: space-between; */
-    align-items: center;
-    padding: 20px 15px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgb(216, 216, 216);
-}
-
-.links-content {
-    padding: 15px;
-}
-.links-pagination {
-    margin-top: 15px;
-    justify-content: end;
-}
-</style>
+<style scoped></style>
