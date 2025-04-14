@@ -15,15 +15,15 @@ const Footer = () => {
                     target="_blank" 
                     rel="noopener noreferrer">
                     <span>桂ICP备</span>
-                    <span>123456789号</span>
+                    <span>2021004940号</span>
                 </a>
                 <a 
                     className={ styles.record } 
-                    href="https://icp.gov.moe/?keyword=1234567798" 
+                    href="https://icp.gov.moe/?keyword=20240566" 
                     target="_blank" 
                     rel="noopener noreferrer">
                     <span>萌ICP备</span>
-                    <span>123456789号</span>
+                    <span>20240566号</span>
                     </a>
             </div>
             <div className={styles.end}>

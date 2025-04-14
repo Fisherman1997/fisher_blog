@@ -1,5 +1,21 @@
 .header {
-    overflow: hidden;
+    /* overflow: hidden; */
+    background-repeat: no-repeat !important;
+    background-size: cover !important; 
+    transition: all 0.5s;
+    position: relative;
+}
+.header::after{
+    content: '';
+    position: absolute;
+    display: block;
+    height: 29%;
+    width: 100%;
+    background: inherit;
+    bottom: -40px;
+    background-position-y: bottom;
+    filter: blur(25px);
+    z-index: 1;
 }
 
 .header h3 {
@@ -176,6 +192,13 @@
 .Search div::after {
     transform: rotate(-45deg);
 }
+.navDown{
+    display: block;
+    height: 0;
+    width: 0;
+    cursor: pointer;
+    transition: all .5s;
+}
 @media screen and (min-width: 745px){
     .list{
         display: flex;
@@ -197,15 +220,10 @@
         display: none;
     }
     .navDown{
-        display: block;
-        height: 0;
-        width: 0;
         border-top: solid 40px transparent;
         border-left: solid 40px transparent;
         border-right: solid 40px rgba(255,255,255,.5);
         border-bottom: solid 40px rgba(255,255,255,.8);
-        cursor: pointer;
-        transition: all .5s;
     }
     .navDown:hover{
         border-right-color: rgba(255,255,255,.8);
@@ -213,6 +231,15 @@
     }
     .Search {
         width: 100vw;
+    }
+}
+
+@media screen and (max-width:700px) {
+    .navDown{
+        border-top: solid 33px transparent;
+        border-left: solid 33px transparent;
+        border-right: solid 33px rgba(255,255,255,.5);
+        border-bottom: solid 33px rgba(255,255,255,.8);
     }
 }
 

@@ -15,9 +15,11 @@ const Header = (props) => {
     }
     return (
         <div className={styles.header} style={{
-            background: `linear-gradient(to bottom, rgba(255,255,255,0),#30435b),url(${ homebj ? imgUrl + homebj : '/images/homebj.jpg' }) center`
+            background: `linear-gradient(to bottom, rgba(255,255,255,0),#30435b),url(${ homebj ? imgUrl + homebj : '/images/homebj.jpg' }) center`,
+            // backgroundRepeat: 'no-repeat',
+            // backgroundSize: 'cover'
         }}>
-            <div className={styles.nav}>
+            <div className={styles.nav}>    
                 <div className='center'>
                     <h1 className={ styles.logo } onClick={ load }>Fisherman</h1>
                     <div>

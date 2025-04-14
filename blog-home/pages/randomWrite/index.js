@@ -1,5 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import Image from 'next/Image'
 import GlobalLayout from '../../components/globalLayout'
 import Loading from '../../components/loading'
 import Comment from '../../components/comment'
@@ -39,7 +40,7 @@ export default function RandomWrite() {
                     <div className={styles.randomInfoNav} onClick={() => router.back()}> back </div>
                     <div className={styles.randomInfoTop}>
                         <div className={styles.randomItemHead}>
-                            { content.portrait && content.portrait[0] ? <img src={ imgUrl + content.portrait } /> : <></> }
+                            { content.portrait && content.portrait[0] ? <Image src={ imgUrl + content.portrait } alt={'封面'}/> : <></> }
                             <div className={styles.randomUserName}>
                                 <p>{ content.createUserName }</p>
                                 <span>{ new Date(content.createDate).toLocaleString() }</span>
@@ -51,7 +52,7 @@ export default function RandomWrite() {
                             { 
                                 content.cover_list ?
                                 <ul className='clear'>
-                                    { content.cover_list.map(citem => ( <li key={citem}><img src={citem} onClick={(ev) => imgShow(ev)} /></li> )) }
+                                    { content.cover_list.map(citem => ( <li key={citem}><Image src={citem} onClick={(ev) => imgShow(ev)} alt={'封面'} /></li> )) }
                                 </ul>
                                 :<></>
                             }
