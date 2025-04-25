@@ -5,7 +5,7 @@
             v-if="QuickTableProps.isSearch && QuickTableProps.search?.length"
             class="QuickTable-search"
         >
-            <el-form :model="tableObject.params" style="width: 100%">
+            <el-form :model="tableObject.params" style="width: 100%" @submit.prevent>
                 <el-row :gutter="15">
                     <template v-for="item in QuickTableProps.search" :key="item.key">
                         <el-col
@@ -16,8 +16,20 @@
                             :lg="4"
                             :xl="3"
                         >
-                            <el-form-item :label="item.label">
+                            <el-form-item :label="item.label" :prop="<string>item.key">
                                 <el-input
+                                    v-if="item.changeLoad"
+                                    v-model="tableObject.params[item.key]"
+                                    :placeholder="item.label"
+                                    clearable
+                                    @keydown="
+                                        (ev: Event | KeyboardEvent) =>
+                                            (ev as KeyboardEvent).key === 'Enter' &&
+                                            methods.loadData()
+                                    "
+                                />
+                                <el-input
+                                    v-else
                                     v-model="tableObject.params[item.key]"
                                     :placeholder="item.label"
                                     clearable
@@ -32,8 +44,26 @@
                             :lg="4"
                             :xl="3"
                         >
-                            <el-form-item label="分类">
+                            <el-form-item label="分类" :prop="<string>item.key">
                                 <el-select
+                                    v-if="item.changeLoad"
+                                    v-model="tableObject.params[item.key]"
+                                    clearable
+                                    placeholder="选择分类"
+                                    @change="methods.loadData"
+                                >
+                                    <!-- <el-option key="全部" label="全部" value="全部" /> -->
+                                    <template v-if="item.select!.length">
+                                        <el-option
+                                            v-for="citem in item.select"
+                                            :key="citem.id"
+                                            :label="citem.name"
+                                            :value="citem.id"
+                                        />
+                                    </template>
+                                </el-select>
+                                <el-select
+                                    v-else
                                     v-model="tableObject.params[item.key]"
                                     clearable
                                     placeholder="选择分类"
@@ -250,6 +280,7 @@ export interface IQuickTableProps<P> {
         key: keyof P | string
         handle?: () => Promise<unknown | boolean> // 返回一个布尔值，true刷新表格，false则不刷新
         select?: { id: number | string; name: string }[]
+        changeLoad?: boolean
     }[]
     tableMaxWidth?: `${number}px`
     tableMinWidth?: `${number}px`
@@ -285,6 +316,10 @@ const handleTable = (handle: (row?: P) => Promise<unknown | boolean>, row: P) =>
         if (data) methods.loadData()
     })
 }
+
+// const handleKeyUp = (ev: Event | KeyboardEvent) => {
+//     if ((ev as KeyboardEvent).key === 'Enter') methods.loadData()
+// }
 
 /** 兼容搜索类型的输入框 */
 // const searchComponents = ref({

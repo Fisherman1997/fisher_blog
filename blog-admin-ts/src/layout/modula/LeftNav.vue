@@ -14,7 +14,7 @@
                     >
                         <template v-for="item in listData">
                             <el-sub-menu
-                                v-if="item.children && item.children.length"
+                                v-if="item.contents === 1"
                                 :index="'/admin' + item.path"
                                 :key="item.path"
                             >
@@ -25,7 +25,7 @@
                                     <span>{{ item.title }}</span>
                                 </template>
                                 <el-menu-item
-                                    v-for="cItem in item.children"
+                                    v-for="cItem in item.children || []"
                                     :index="'/admin' + cItem.path"
                                     :key="cItem.path"
                                     >{{ cItem.title }}</el-menu-item

@@ -1,4 +1,5 @@
 ﻿using Blog.Model.Entity;
+using Blog.Model.Enum;
 using Blog.Model.Param;
 using Blog.Model.Rsult;
 using Blog.Service.Api.Interface;
@@ -23,22 +24,15 @@ namespace Blog.Service.Api
                 var count = await Db.Queryable<RoutingConfigureEnity>().CountAsync();
                 param.SerialNumber = count + 1;
             }
-            //var element = new RoutingConfigureEnity
-            //{
-            //    Title = param.Title,
-            //    Name = param.Name,
-            //    Path = param.Path,
-            //    Component = param.Component,
-            //    Range = param.Range,
-            //    Menu = param.Menu,
-            //    Redirect = param.Redirect,
-            //    Status = param.Status,
-            //    SerialNumber = (int)param.SerialNumber!
-            //};
+            if (param.Primary_id != null) 
+            { 
+                var primary = await Db.Queryable<RoutingConfigureEnity>().In(param.Primary_id).SingleAsync();
+                if (primary == null) throw new NullReferenceException("错误父级不存在");
+                if (primary.Contents == ContentsEnum.No) throw new NullReferenceException("该路由不是目录无法添加子级");
+                if (primary.Primary_id != null) throw new NullReferenceException("只有一级目录才能添加子级");
+            }
             var element = new RoutingConfigureEnity();
             CommonFun.AssignProps(element, param);
-            Console.WriteLine(param.IconType);
-            Console.WriteLine(element.IconType);
             await Db.Storageable(element).ExecuteCommandAsync();
         }
 
@@ -48,17 +42,11 @@ namespace Blog.Service.Api
                 .Where(it => it.Id == param.Id)
                 .FirstAsync();
             if (routingConfigure == null) throw new NullReferenceException("查不到此路由");
-
-            //routingConfigure.Title = param.Title;
-            //routingConfigure.Path = param.Path;
-            //routingConfigure.Name = param.Name;
-            //routingConfigure.Component = param.Component;
-            //routingConfigure.Range = param.Range;
-            //routingConfigure.Menu = param.Menu;
-            //routingConfigure.Redirect = param.Redirect;
-            //routingConfigure.Status = param.Status;
-            //routingConfigure.SerialNumber = (int)param.SerialNumber!;
-
+            if (routingConfigure.Contents == ContentsEnum.Yes && param.Contents == ContentsEnum.No)
+            {
+                var children = await Db.Queryable<RoutingConfigureEnity>().Where(it => it.Primary_id == routingConfigure.Id).ToListAsync();
+                if (children != null && children.Count != 0) throw new InvalidOperationException("必须删除所以子路由才可以修改为“不是目录项”");
+            }
             CommonFun.AssignProps(routingConfigure, param);
             await Db.Storageable(routingConfigure).ExecuteCommandAsync();
 
@@ -110,6 +98,33 @@ namespace Blog.Service.Api
                     return new RoutingConfigureFindRsult(it, children);
                 })
                 .ToList();
+            var idsNotPrimaryForChildren = list.Where(it =>
+                {
+                    return it.Primary_id != null && !(ids!.Contains((int)it.Primary_id));
+                })
+                .ToList();
+
+            foreach (var it in idsNotPrimaryForChildren)
+            {
+                var isPrimary = result.Find(cit => it.Primary_id == cit.Id);
+                if (isPrimary != null)
+                {
+                    if (isPrimary.Children == null) isPrimary.Children = new List<RoutingConfigureEnity>();
+                    isPrimary.Children.Add(it);
+                }
+                else
+                {
+                    var primary = await Db.Queryable<RoutingConfigureEnity>().Where(r => r.Id == it.Primary_id).FirstAsync();
+                    if (primary == null)
+                    {
+                        // 如果数据库中不存在对应的主节点，可以根据业务决定抛错或跳过
+                        continue;
+                    }
+                    var children = new List<RoutingConfigureEnity>() { it };
+                    result.Add(new RoutingConfigureFindRsult(primary, children));
+                }
+
+            }
             return result;
 
         }

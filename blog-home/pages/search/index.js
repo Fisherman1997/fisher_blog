@@ -10,7 +10,7 @@ export default function Search(props) {
     const router = useRouter()
 
     const searchLoad = (search) => {
-        console.log(search)
+        // console.log(search)
         window.history.pushState({},'',`${location.pathname}?search=${search}`)
         ListAllRef.current.loadData()
     }

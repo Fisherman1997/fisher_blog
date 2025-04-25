@@ -2,7 +2,6 @@ import { useAxios } from '@/hooks/useAxios'
 import type { IServiceRouter } from '@/routers/router.store'
 import type { IUserInfo } from '@/store/user.store'
 import { getStorageItem } from '@/utils/storage'
-// import { asyncRouter } from '@/routers'
 
 const { post } = useAxios()
 

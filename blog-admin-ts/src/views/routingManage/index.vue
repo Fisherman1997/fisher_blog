@@ -26,7 +26,7 @@
                                 width="60px"
                                 align="center"
                             />
-                            <el-table-column label="标题" prop="title">
+                            <el-table-column label="标题" prop="title" width="180">
                                 <template #default="props">
                                     <el-space>
                                         {{ props.row.title }}
@@ -105,8 +105,15 @@
             <el-table-column label="路由名称" prop="name" />
             <el-table-column label="路由路径" prop="path" />
             <el-table-column label="路由组件" prop="component" />
-            <el-table-column label="操作">
+            <el-table-column label="操作" align="left" width="190">
                 <template #default="props">
+                    <el-button
+                        v-if="props.row.contents"
+                        type="primary"
+                        @click="changeRoute('insert', props.row)"
+                        link
+                        >新增子级</el-button
+                    >
                     <el-button type="primary" @click="changeRoute('update', props.row)" link
                         >修改</el-button
                     >
@@ -129,7 +136,7 @@ import { useTable } from '@/hooks/useTable.js'
 
 export interface IRoutingModule {
     id?: number
-    primary_id?: string
+    primary_id?: number | null
     title: string
     name: string
     path: string
@@ -153,7 +160,10 @@ const { tableObject, methods } = useTable<IRoutingModule, { range: 0 | 1 }>({
 })
 
 const changeRoute = (type: 'insert' | 'update' = 'insert', row?: IRoutingModule) => {
-    const title = type === 'insert' ? '新增路由' : '修改路由'
+    let title: string = type === 'insert' ? '新增路由' : '修改路由'
+    if (type === 'insert') title = '新增路由'
+    if (type === 'update') title = '修改路由'
+    if (type === 'insert' && typeof row?.id === 'number') title = `新增子级-${row.title}`
     CustomDialog({
         title,
         modal: false,

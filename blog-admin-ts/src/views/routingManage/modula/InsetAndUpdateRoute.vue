@@ -1,28 +1,6 @@
 <template>
     <div id="add-update">
-        <div class="add-update-header">
-            <el-radio-group
-                :disabled="type === 'update'"
-                v-model="primaryBol"
-                @change="primaryChange"
-            >
-                <el-radio-button :value="false">一级路由</el-radio-button>
-                <el-radio-button :value="true">二级路由</el-radio-button>
-            </el-radio-group>
-        </div>
         <el-form ref="formRef" :model="formData" :rules="rules" label-width="180px">
-            <el-form-item v-if="primaryBol" label="父级：" prop="primary_id">
-                <el-select v-model="formData.primary_id" class="m-2" placeholder="选择父级路由">
-                    <template v-if="primaryList.list.length">
-                        <el-option
-                            v-for="item in primaryList.list"
-                            :key="item.id"
-                            :label="item.title"
-                            :value="item.id as number"
-                        />
-                    </template>
-                </el-select>
-            </el-form-item>
             <el-form-item label="标题：" prop="title">
                 <el-input v-model="formData.title" />
             </el-form-item>
@@ -30,17 +8,23 @@
                 <el-input v-model="formData.name" />
             </el-form-item>
             <el-form-item label="路由路径：" prop="path">
+                <span v-if="typeof row?.id === 'number' && formData.primary_id">{{
+                    `${row?.path} + ⇩`
+                }}</span>
                 <el-input v-model="formData.path" />
             </el-form-item>
             <el-form-item label="路由组件：" prop="component">
                 <el-input v-model="formData.component" />
             </el-form-item>
-            <el-form-item label="范围：" prop="range">
+            <el-form-item
+                v-if="!(typeof formData.primary_id === 'number')"
+                label="范围："
+                prop="range"
+            >
                 <el-switch
                     v-model="isRange"
                     size="large"
                     style="--el-switch-off-color: #13ce66"
-                    @change="primaryLoadData"
                     inline-prompt
                     active-text="前台"
                     inactive-text="后台"
@@ -88,6 +72,16 @@
                     inactive-text="禁用"
                 />
             </el-form-item>
+            <el-form-item v-if="!formData.primary_id" label="目录：" prop="contents">
+                <el-switch
+                    v-model="isContents"
+                    size="large"
+                    style="--el-switch-off-color: #13ce66"
+                    inline-prompt
+                    active-text="是"
+                    inactive-text="否"
+                />
+            </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm(formRef, params, result)">{{
                     type === 'insert' ? '新增' : '修改'
@@ -98,18 +92,17 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, onBeforeMount, watch } from 'vue'
+import { ref, onBeforeMount, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import customDialog, { type ICustomDialogProps } from '@/components/customDialog/CustomDialog'
 import IconAll from '@/components/iconAll/index'
 import { useForm, type RequestParams } from '@/hooks/useForm.js'
-import { useAxios } from '@/hooks/useAxios'
 import { assignProps } from '@/utils/utils'
 import type { IRoutingModule } from '../index.vue'
 
 interface FromParam {
     id?: number
-    primary_id?: string
+    primary_id?: number | null
     title: string
     name: string
     path: string
@@ -120,16 +113,17 @@ interface FromParam {
     iconType: string
     redirect: string
     status: number
+    contents: number
 }
 
 const status = ref(true)
 const isMenu = ref(true)
 const isRange = ref(true)
+const isContents = ref(false)
 
-const { post } = useAxios()
 const { formData, formRef, rules, submitForm, formDataSet } = useForm<FromParam>(
     {
-        primary_id: '',
+        primary_id: null,
         title: '',
         name: '',
         path: '',
@@ -140,6 +134,7 @@ const { formData, formRef, rules, submitForm, formDataSet } = useForm<FromParam>
         iconType: '',
         redirect: '',
         status: 1,
+        contents: 0,
     },
     {
         title: [{ required: true, message: '该项未填写', trigger: 'blur' }],
@@ -151,10 +146,7 @@ const { formData, formRef, rules, submitForm, formDataSet } = useForm<FromParam>
         status: [{ required: true, message: '该项未填写', trigger: 'blur' }],
     },
 )
-const primaryBol = ref(false)
-const primaryList = reactive({
-    list: [] as FromParam[],
-})
+// const primaryBol = ref(false)
 
 const { type = 'insert', row } = defineProps<ICustomDialogProps<IRoutingModule>>()
 
@@ -169,6 +161,9 @@ watch(isMenu, () => {
 })
 watch(isRange, () => {
     formData.range = isRange.value ? 1 : 0
+})
+watch(isContents, () => {
+    formData.contents = isContents.value ? 1 : 0
 })
 
 const selectIcon = () => {
@@ -187,22 +182,16 @@ const selectIcon = () => {
 const params = async (): Promise<RequestParams<FromParam> | void> => {
     const url = type === 'insert' ? 'routingConfigure/insert' : 'routingConfigure/update'
     const element = { ...formData }
-    if (primaryBol.value) {
-        if (typeof element.primary_id !== 'number') {
-            ElMessage.warning('请选择父级路由')
-            return
-        }
-    } else delete element.primary_id
     if (type === 'update') element.id = row!.id
+    if (type === 'insert' && typeof row?.id === 'number') {
+        element.path = row.path + element.path
+        element.range = row.range
+    } else delete element.primary_id
     return {
         url,
         element,
     }
 }
-// const result = () => {
-//     ElMessage.success(`${type === 'insert' ? '新增' : '修改'}成功`)
-//     emit('close',true)
-// }
 
 const result = (param: boolean) => {
     if (param) {
@@ -213,28 +202,18 @@ const result = (param: boolean) => {
     }
 }
 
-const primaryChange = () => {
-    if (primaryBol.value === false) formData.primary_id = ''
-}
-const primaryLoadData = async () => {
-    const element = { range: formData.range ? 1 : 0 }
-    const data = await post<FromParam[], typeof element>('routingConfigure/list', element)
-    if (data && data.statusCode === 200) {
-        const result = data.result.filter((element) => element.primary_id === null)
-        primaryList.list = [...result]
-    }
-}
-
 onBeforeMount(() => {
-    primaryLoadData()
     if (type === 'update') {
         assignProps(formData, row!)
         formDataSet('serialNumber', row?.serialNumber as number)
+        formDataSet('primary_id', row?.primary_id)
         status.value = formData.status === 1 ? true : false
         isMenu.value = formData.menu === 1 ? true : false
         isRange.value = formData.range === 1 ? true : false
-        console.log(formData.menu)
-        primaryBol.value = row!.primary_id ? true : false
+        isContents.value = formData.contents === 1 ? true : false
+    } else if (type === 'insert' && typeof row?.id === 'number') {
+        formDataSet('primary_id', row.id)
+        console.log(typeof row?.id)
     }
 })
 </script>

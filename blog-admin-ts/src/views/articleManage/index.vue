@@ -57,12 +57,14 @@ const quickTableParam = reactive<IQuickTableProps<IArticle>>({
             label: '标题',
             key: 'title',
             type: 'input',
+            changeLoad: true,
         },
         {
             label: '分类',
             key: 'classId',
             type: 'select',
             select: classlist.value,
+            changeLoad: true,
         },
         {
             label: '新增',

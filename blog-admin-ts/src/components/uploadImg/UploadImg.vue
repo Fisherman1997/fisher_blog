@@ -7,7 +7,7 @@
                 :style="`width: ${size}`"
                 :key="index"
             >
-                <img :src="item" :style="`width: ${size}`" />
+                <el-image :src="item" :style="`width: ${size}`" />
                 <div class="img-list-control">
                     <span @click="lookOver(item)">
                         <el-icon><Search /></el-icon>

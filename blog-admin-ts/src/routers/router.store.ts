@@ -27,6 +27,7 @@ export interface IServiceRouter {
     serialNumber: number
     status: number
     title: string
+    contents: number
 }
 const modules = import.meta.glob('@/views/**/*.vue')
 // console.log(modules)
@@ -42,6 +43,7 @@ const changeRouter = async (result: IServiceRouter[]) => {
         if (item.children && item.children.length) {
             if (item.redirect) routerItem.redirect = item.redirect
             else routerItem.redirect = item.children[0].path
+            console.log(item.children)
             routerItem.children = item.children.map((citem) => {
                 return <IRouter>{
                     path: '/admin' + citem.path,
@@ -51,7 +53,6 @@ const changeRouter = async (result: IServiceRouter[]) => {
                         modules[`/src/views${citem.component}.vue`]().then(
                             (mod) => (mod as ComponentModule).default,
                         ),
-                    // component: () => import(`@/views${citem.component}.vue`),
                 }
             })
         } else {
@@ -59,7 +60,6 @@ const changeRouter = async (result: IServiceRouter[]) => {
                 modules[`/src/views${item.component}.vue`]().then(
                     (mod) => (mod as ComponentModule).default,
                 )
-            // routerItem.component = () => import(`@/views${item.component}.vue`)
         }
         return routerItem
     })

@@ -34,5 +34,8 @@ namespace Blog.Model.Entity
 
         [SugarColumn(ColumnDescription = "重定向路径", IsNullable = true)]
         public string? Redirect { get; set; }
+
+        [SugarColumn(ColumnDescription = "是否目录：1-是，0-否", IsNullable = false)]
+        public ContentsEnum Contents { get; set; }
     }
 }

@@ -3,6 +3,7 @@ import GlobalLayout from '../../components/globalLayout'
 import Empty from '../../components/empty'
 import { getFn } from '../../utils/useAxios'
 import Comment from '../../components/comment'
+// import { imgUrl } from '../../utils/baseUrl.cofing'
 import styles from './Links.module.css'
 
 export default function Links() {
@@ -16,7 +17,8 @@ export default function Links() {
         }
     }
     const imgError = (ev) => {
-        ev.target.src = 'https://www.yuxuemei.top/images/portrait.jpg'
+        // ev.target.src = 'https://www.yuxuemei.top/images/portrait.jpg'
+        ev.target.src = '/images/portrait.jpg'
         // ev.target.src = 'https://yuxuemei.top/api/imgS/7040217969334423552.jpeg'
     }
     useEffect(() => {

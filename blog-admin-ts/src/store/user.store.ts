@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
-import { getStorageItem } from '@/utils/storage'
-import { ElMessage } from 'element-plus'
+import { delStorageItem, getStorageItem } from '@/utils/storage'
 import { checkToken } from '@/api/login'
 
 export interface IUserInfo {
@@ -46,7 +45,10 @@ export const useUserStore = defineStore('userInfo', {
                         resolve(true)
                     })
                     .catch(() => {
-                        ElMessage.warning('登录失效')
+                        delStorageItem('token')
+                        setTimeout(() => {
+                            location.replace('/admin/login')
+                        }, 500)
                     })
             })
         },

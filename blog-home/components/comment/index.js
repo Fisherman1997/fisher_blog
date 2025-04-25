@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react'
 import { postFn } from '../../utils/useAxios'
 import Loading from '../loading'
@@ -12,6 +13,7 @@ const Comment = (props) => {
     const [ paging, setPaging ] = useState({ page: 1, pageNum:10, total: 0 });
     const [ comment, setComment ] = useState(null)
     const [ commentList, setCommentList ] = useState([])
+    const router = useRouter()
     const loadData = async () => {
         setLoadingState(true)
         const element = { ...paging }
@@ -24,8 +26,26 @@ const Comment = (props) => {
             changePaging.total = data.result.total
             setComment(null)
             setPaging(changePaging)
+            jumpComment()
         }
         setLoadingState(false)
+    }
+
+    /**
+     * 检测url中是否又评论id,有则跳到对应的评论位置
+     */
+    const jumpComment = () => {
+        let { comment } = router.query
+        if (!comment) comment = new URLSearchParams(location.search).get("comment")
+        if (comment) {
+            setTimeout((value) => {
+                const element = document.getElementById(value)
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                })
+            },0,comment)
+        }
     }
     const changePaging = (value) => {
         setPaging(value)
@@ -51,7 +71,7 @@ const Comment = (props) => {
                 commentList.length ?
                 commentList.map((itme, index) => {
                     return (
-                        <div className={ styles.commentItme } key={itme.id}>
+                        <div id={ `comment_${itme.id}` } className={ styles.commentItme } key={itme.id}>
                             <div className={ styles.commentInfo }>
                                 <img src={ `https://q2.qlogo.cn/headimg_dl?dst_uin=${itme.qq}&spec=100` } />
                                 <span>{itme.reviewerName}</span>

@@ -22,7 +22,7 @@ interface IOptions<IComponentProps, TOpen> {
 
 /**
  *
- * @param {*}  options { <br />
+ * @param {IOptions}  options { <br />
  *         title: '弹窗标题，type string',
  *         width: '弹窗的宽度  100% 自动宽高全屏, type string',
  *         top: '弹窗的宽度离顶部距离   默认8vh, type string  不建议自定义，还有问题',

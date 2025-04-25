@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import GlobalLayout from '../../components/globalLayout'
 import hljs from 'highlight.js'
@@ -45,7 +45,7 @@ export default function AticleDetails() {
         const smoothScroll = setInterval(() => {
             scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
             const distance = targetPosition - scrollTop;
-            if (Math.abs(distance) <= 5) {
+            if (Math.abs(distance) <= 10) {
                 window.scrollTo(0, targetPosition);
                 clearInterval(smoothScroll);
             } else {
@@ -53,9 +53,16 @@ export default function AticleDetails() {
                 window.scrollTo(0, scrollTop + step);
             }
         }, 8); 
-        setTimeout(() => clearInterval(smoothScroll), 1000);
+        // setTimeout(() => clearInterval(smoothScroll), 1000);
         setRightNav(false);
     };
+    const jumpComment = () => {
+        const element = document.getElementById('commentTap')
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        })
+    }
     const navConstruct = (contents, topSpace) => {
         // 渲染目录
         return contents.map(item => {
@@ -127,7 +134,7 @@ export default function AticleDetails() {
                             content.contents ? navConstruct(content.contents) : <></>
                         }
                             <span key={"commentTap"}>
-                                <a onClick={ () => jumpPosition("commentTap") } >评论</a>
+                                <a onClick={ jumpComment } >评论</a>
                             </span>
                         </div>
                     </div>

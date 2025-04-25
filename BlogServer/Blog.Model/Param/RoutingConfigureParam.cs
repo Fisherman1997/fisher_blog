@@ -16,6 +16,7 @@ namespace Blog.Model.Param
         public required string Redirect { get; set; }
         public required StatusEnum Status { get; set; }
         public int? SerialNumber { get; set; }
+        public ContentsEnum Contents { get; set; }
     }
 
     public class RoutingConfigureUpdateParam : RoutingConfigureInsertParam

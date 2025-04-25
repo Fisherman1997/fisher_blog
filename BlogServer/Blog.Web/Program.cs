@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SqlSugar;
 using Blog.Web.Filter;
+using static System.Net.WebRequestMethods;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,7 +86,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSpecificOrigin", policy =>
     {
-        policy.WithOrigins(["http://localhost:3000"])
+        policy.WithOrigins(["http://localhost:5000","http://localhost:3000"])
         .AllowAnyHeader()
         .AllowAnyMethod();
     });
@@ -98,9 +99,9 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseCors("AllowSpecificOrigin");
 }
 
+app.UseCors("AllowSpecificOrigin");
 
 app.UseHttpsRedirection();
 

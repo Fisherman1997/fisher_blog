@@ -1,6 +1,6 @@
 <template>
     <div class="user-change">
-        <el-form ref="formRef" :model="formData" :rules="rules" label-width="80px">
+        <el-form ref="formRef" :model="formData" :rules="rules" label-width="80px" @submit.prevent>
             <el-form-item label="名称：" prop="name">
                 <el-input v-model="formData.name" />
             </el-form-item>

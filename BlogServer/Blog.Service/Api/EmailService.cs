@@ -4,6 +4,8 @@ using Blog.Service.Api.Interface;
 using Blog.Utils;
 using MailKit.Net.Smtp;
 using MimeKit;
+using System.Web;
+using System.Xml.Linq;
 
 namespace Blog.Service.Api
 {
@@ -18,6 +20,7 @@ namespace Blog.Service.Api
             message.From.Add(new MailboxAddress("Fisherman", Email.Email));
             message.To.Add(new MailboxAddress($"{toEmailBol}@qq.com", $"{toEmailBol}@qq.com"));
             message.Subject = "在Fisherman有人回复你";
+
 
             //var name = string.IsNullOrEmpty(toEmail) ? enity.ReviewerName : toEmail;
             var bodyBuilder = new BodyBuilder
@@ -42,7 +45,7 @@ namespace Blog.Service.Api
                                     <p style=""font-size: 14px;"">祝你生活美满，身体健康，萌萌哒</p>       
                                     <div style=""text-align: center;"">
                                         <p>
-                                            <a href='{RrticleUrl}' style=""text-transform: uppercase;text-decoration: none;font-size: 14px;border: 2px solid #6c7575;color: #2f3333; padding: 10px; display: inline-block;margin: 10px auto 0; "" target=""_blank"" rel=""noopener"">点击链接</a>
+                                            <a href='{ChekUrl(RrticleUrl, enity.Id)}' style=""text-transform: uppercase;text-decoration: none;font-size: 14px;border: 2px solid #6c7575;color: #2f3333; padding: 10px; display: inline-block;margin: 10px auto 0; "" target=""_blank"" rel=""noopener"">点击链接</a>
                                         </p>        
                                     </div>
                                     <p style=""font-size: 12px;text-align: center;color: #999;"">
@@ -64,6 +67,48 @@ namespace Blog.Service.Api
                 await client.AuthenticateAsync(Email.Email, Email.Password);
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);
+            }
+        }
+        private string ChekUrl(string url, int id) 
+        {
+            if (HasParameters(url))
+            {
+                return url + "&comment_" + id.ToString();
+            }
+            else if (url[url.Length - 1] == '/')
+            {
+                return url + "?comment_" + id.ToString();
+            }
+            else
+            {
+                return url + "/?comment_" + id.ToString();
+            }
+        }
+        private bool HasParameters(string url)
+        {
+            try
+            {
+                Uri uri = new Uri(url);
+
+                // 获取查询参数部分（包含问号）
+                string query = uri.Query;
+
+                // 如果没有查询部分或查询部分仅为问号
+                if (string.IsNullOrEmpty(query) || query == "?")
+                {
+                    return false;
+                }
+
+                // 解析查询参数
+                var parameters = HttpUtility.ParseQueryString(query);
+
+                // 检查是否存在有效参数
+                return parameters.Count > 0;
+            }
+            catch (UriFormatException)
+            {
+                // URL格式无效
+                return false;
             }
         }
     }

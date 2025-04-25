@@ -9,7 +9,7 @@ namespace Blog.Web.Controllers.Api
 {
     [Route("api/routingConfigure")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class RoutingConfigureController : ControllerBase
     {
         public RoutingConfigureController(IRoutingConfigureService routingConfigureService)

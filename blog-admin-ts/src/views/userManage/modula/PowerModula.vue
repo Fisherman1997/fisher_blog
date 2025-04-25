@@ -82,11 +82,14 @@ const treeData = computed(() => {
 
 const handleCheckChange = (data: (typeof routeList.state)[number], checked: boolean) => {
     if (checked) {
+        // console.log(checked, data)
         if (userPower.element.includes(data.id!)) return
         userPower.element.push(data.id!)
     } else {
+        // console.log(checked, data)
         userPower.element = userPower.element.filter((item) => item !== data.id)
     }
+    console.log(userPower.element)
 }
 
 const routeLoadData = async () => {

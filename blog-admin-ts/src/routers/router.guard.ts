@@ -49,12 +49,6 @@ const clearRuoter = async (router, userRouterList) => {
 */
 
 const redirectWhite = ['/admin/login', '/admin/register']
-// const Err404 = {
-//     path: '/:pathMatch(.*)*',
-//     name: 'NotFound',
-//     meta: { title: '加载中' },
-//     redirect: '/admin/404',
-// }
 
 export const setupBeforeEach = (router: Router) => {
     router.beforeEach(async (to, _from, next) => {
@@ -110,20 +104,5 @@ export const setupBeforeEach = (router: Router) => {
 }
 
 export const setupAfterEach = (router: Router) => {
-    router.afterEach(() => {
-        // if (storeRouter && storeRouter.length) {
-        // console.log(router)
-        // 	// 成功拼接动态路由后，匹配不到的路由就自动转到404
-        // 	const list = router.getRoutes().find(item => item.name ==='NotFound')
-        // 	// if (redirectWhite.includes(to.path)) return
-        // 	if (list.redirect && list.redirect === '404' ) return
-        // 	console.log(123456)
-        // 	router.addRoute(Err404)
-        // }
-        // const liet = router.getRoutes().map(item => item.path)
-        // console.log(liet)
-        // console.log(liet.includes(to.path))
-        // if (liet.includes(to.path)) next("/admin/404")
-        // console.log(router.getRoutes())
-    })
+    router.afterEach(() => {})
 }
