@@ -89,12 +89,14 @@ export default function AticleDetails() {
         }
     }
     useEffect(() => {
-        const str = window.location.search.split('?id=')[1] || null
-        if (!str) {
+        let { id } = router.query
+        if (!id) id = new URLSearchParams(location.search).get("id")
+        if (!id) {
             router.back()
             return
         }
-        loadData(str)
+        loadData(id)
+        // console.log(id)
         document.onscroll = (ev) => {
             const top = document.body.scrollTop || document.documentElement.scrollTop
             const left = document.querySelector('.aticleDetails_content')
@@ -157,7 +159,7 @@ export default function AticleDetails() {
                         : <></> 
                     }
                     <span key={"commentTap"}>
-                        <a onClick={ () => jumpPosition("commentTap") } >评论</a>
+                        <a onClick={ jumpComment } >评论</a>
                     </span>
                 </div> 
                 : <></> 

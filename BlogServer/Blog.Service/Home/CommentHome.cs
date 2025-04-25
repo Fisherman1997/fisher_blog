@@ -35,13 +35,14 @@ namespace Blog.Service.Home
             //};
 
             var element = new CommentEnity();
-            CommonFun.AssignProps(element, param,nameof(CommentEnity.Qq));
+            CommonFun.AssignProps(element, param);
             element.CreateDate = DateTime.Now;
-
+            var comment = await Db.Insertable(element).ExecuteReturnIdentityAsync();
             if (param.ReplyQQ != element.Qq)
             {
                 try
                 {
+                    element.Id = comment;
                     await EmailService.SendEmailAsync(param.ReplyQQ, element, param.ArticleUrl);
                 }
                 catch (Exception ex)
@@ -49,7 +50,6 @@ namespace Blog.Service.Home
                     throw new Exception("邮箱发送失败，不知道为啥总之就是失败了，看看你的QQ对不对" + ex.ToString());
                 }
             }
-            await Db.Storageable(element).ExecuteCommandAsync();
         }
 
         public async Task<PageResult<CommentHomeRsult>> List(CommentHomeFindParam param)

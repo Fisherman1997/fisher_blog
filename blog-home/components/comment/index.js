@@ -44,7 +44,7 @@ const Comment = (props) => {
                     behavior: 'smooth',
                     block: 'center'
                 })
-            },0,comment)
+            },100,comment)
         }
     }
     const changePaging = (value) => {

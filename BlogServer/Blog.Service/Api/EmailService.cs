@@ -73,15 +73,15 @@ namespace Blog.Service.Api
         {
             if (HasParameters(url))
             {
-                return url + "&comment_" + id.ToString();
+                return url + "&comment=comment_" + id.ToString();
             }
             else if (url[url.Length - 1] == '/')
             {
-                return url + "?comment_" + id.ToString();
+                return url + "?comment=comment_" + id.ToString();
             }
             else
             {
-                return url + "/?comment_" + id.ToString();
+                return url + "/?comment=comment_" + id.ToString();
             }
         }
         private bool HasParameters(string url)
